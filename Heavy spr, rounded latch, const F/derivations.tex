@@ -1,0 +1,89 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\usepackage{enumerate}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{etoolbox}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage{tikzsymbols}
+\usepackage{hyperref}
+
+\begin{document}
+\begin{center}
+Ideal F-v motor, Heavy Spring, Rounded Latch @ Constant Force
+\end{center}
+
+\noindent \textbf{Parameters:}
+\newline
+Motor: $F_{\text{max}}$, $d$, $v_{\text{max}}$ \newline
+Spring: $m_{\text{spr}}$ \newline
+Latch: $F_l$, $m_l$, $v_{\text{l0}}$, $R$ \newline
+Projectile: $m$ \newline
+Timing: $t_l$ (time of latch releasing), $t_{\text{to}}$ (time of projectile taking off)
+\newline
+Non-dimensionalized variables: see pg. 7, supplemental.
+\newline \newline
+\noindent \textbf{Prior to latch release} ($t \leq t_l$)
+\newline
+Latch moves in y direction, projectile in x direction (like supplemental).
+\newline
+Position of the rounded latch, w/r/t time (assume $y(0) = 0$) for a constant force:
+\[ 
+    y(t) = v_0 t + \frac{1}{2} \frac{F_{\text{max}}}{m_l}\ t^2
+\]
+Position of projectile while in contact with latch:
+\[
+    x(t) = R \left(1 - \sqrt{1-\left( \frac{y(t)}{R} \right) ^2}\right)
+\]
+Velocity of projectile, in terms of $y(t)$:
+\[
+    v(t) = \frac{y(t)y'(t)}{R\sqrt{1 - \left(\frac{y(t)}{R}\right)^2}}
+\]
+Acceleration:
+\[
+    a(t) = \frac{1}{R \sqrt{1 - \left( \frac{y(t)}{R} \right) ^2}} \left( y'(t)^2 + y(t)y''(t) + \frac{y(t)^2 y'(t)^2}{R^2 - y(t)^2}\right)
+\]
+\newline
+Game-plan: By leaving these equations in terms of $y(t)$, we can declare $y(t)$ as a separate function in Matlab. This hopefully will also allow changing $y(t)$ easily, if needed (e.g. for testing/debugging).
+\newline \newline
+Sanity checking: Plugging in $y(t) = v_0$ in each of these equations yielded identical results to equations 27-29 in supplemental text.
+\newline \newline
+Non-dimensionalizing: Yields exact same equations (with tildas)
+\newline 
+\newline
+\noindent \textbf{Solving for time of latch release $t_l$}
+\newline
+Using the energy argument of section 6 of supplemental,
+\[
+    \frac{1}{2}(1-\tilde{x})^2 + \frac{1}{2}\left(\tilde{m} + \frac{\tilde{m}_{\text{spr}}}{3} \right)\tilde{v}^2 - \int_0^{\tilde{x}} \! f_{\text{latch}}(x') \, \mathrm{d}x' = constant. 
+\]
+\[
+    \rightarrow \left(\tilde{m} + \frac{\tilde{m}_{\text{spr}}}{3} \right)\tilde{a}(\tilde{t_l}) = 1 - \tilde{x}(\tilde{t_l})
+\]
+We can substitude the equations for $x(t)$ and $a(t)$ above into this expression, and solve for $t_l$.
+\newline 
+\newline
+\noindent \textbf{Solving for velocity at takeoff $v_{\text{to}}$:}
+\newline
+Based on conservation of energy: $\tilde{U}(\tilde{t_l}) + \tilde{KE}(\tilde{t_l}) = \tilde{KE}(\tilde{v_{\text{to}}})$), we get equation 39 in supplemental:
+\[
+    \tilde{v_{\text{to}}} = \sqrt{\tilde{v_l}^2 + \frac{1}{\tilde{m} + \frac{\tilde{m}_{\text{spr}}}{3}} (1 - \tilde{x_l})^2}
+\]
+where $\tilde{v}_l$ and $\tilde{x}_l$ are the equations for $\tilde{v}(\tilde{t})$ and $\tilde{x}(\tilde{t})$ above, evaluated at $\tilde{t}_l$.
+\newline 
+\newline
+\noindent \textbf{After latch release $t_l < t < t_{\text{to}}$:}
+\newline
+Equations 61-67 in supplemental.
+\newline
+\newline
+\noindent \textbf{After takeoff $t > t_{\text{to}}$:}
+\[
+    x(t) = v_{\text{to}}t
+\]
+\[
+    v(t) = v_{\text{to}}
+\]
+\end{document}
