@@ -1,10 +1,10 @@
 clearvars;
 close all;
 
-plot_y = false;
-plot_x = false;
-plot_tl = false;
-plot_vto = false;
+plot_y = true;
+plot_x = true;
+plot_tl = true;
+plot_vto = true;
 plot_xl = true;
 plot_vl = true;
 plot_al = true;
@@ -61,7 +61,7 @@ for m=1:num_mass
     for i=1:num_times
         cur_val = abs((p.m(m) + p.m_spr/3) .* a(i) + x(i) - 1);
         if(cur_val < min_val(m))
-            t_l_index(m) = i;
+            t_l_index(m) = max(1, i - 1);
             min_val(m) = cur_val;
         end
     end
@@ -101,7 +101,7 @@ for i=1:num_mass
     m_sqrt = sqrt(m + p.m_spr / 3);
     
     phi = atan(m_sqrt * vl(i) / (1 - xl(i))) - (t_l(i)) ./ m_sqrt;
-    x_r(:, i) = 1 - v_to(i) * m_sqrt * cos(p.t / m_sqrt + phi);
+    x_r(:, i) = 1 - (v_to(i) * m_sqrt * cos(p.t / m_sqrt + phi));
     v_r(:, i) = v_to(i) * sin(p.t / m_sqrt + phi);
     a_r(:, i) = v_to(i) / m_sqrt * cos(p.t / m_sqrt + phi);
     
