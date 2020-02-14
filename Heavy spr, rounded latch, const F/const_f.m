@@ -8,9 +8,6 @@ plot_vto = false;
 plot_xl = true;
 plot_vl = true;
 plot_al = true;
-plot_xr = true;
-plot_vr = true;
-plot_ar = true;
 
 %% Load all parameters from a file
 p = load('params');
@@ -48,7 +45,7 @@ end
 a = 1 ./ (p.R * sqrt(1 - (y / p.R).^2)) .* (y_dot.^2 + y .* y_ddot + y.^2 .* y_dot.^2 ./ (p.R^2 - y.^2));
 
 if(plot_x)
-    plot(p.t, a);
+%     plot(p.t, a);
 end
 
 %% calculates t_l, time of latch release
@@ -81,24 +78,10 @@ if(plot_tl)
     set(gca,'XScale', 'log');
 end
 
-x = x' * ones(1, num_mass);
-v = v' * ones(1, num_mass);
-a = a' * ones(1, num_mass);
-
-for m=1:num_mass
-    for t=1:num_times
-        if p.t(t) >= t_l(m)
-            x(t, m) = 0;
-            v(t, m) = 0;
-            a(t, m) = 0;
-        end
-    end
-end
-
 %% calculate v_to: velocity when projectile loses contact with spring
-x_l = v(t_l_index);
-v_l = v(t_l_index);
-v_to = sqrt(v_l.^2 + 1 ./ (p.m + p.m_spr / 3) .* (1 - x_l).^2);
+xl = v(t_l_index);
+vl = v(t_l_index);
+v_to = sqrt(vl.^2 + 1 ./ (p.m + p.m_spr / 3) .* (1 - xl).^2);
 
 if(plot_vto)
     figure(4);
@@ -117,12 +100,26 @@ for i=1:num_mass
     m = p.m(i);
     m_sqrt = sqrt(m + p.m_spr / 3);
     
-    phi = atan(m_sqrt * v_l(i) / (1 - x_l(i))) - (t_l(i)) ./ m_sqrt;
+    phi = atan(m_sqrt * vl(i) / (1 - xl(i))) - (t_l(i)) ./ m_sqrt;
     x_r(:, i) = 1 - v_to(i) * m_sqrt * cos(p.t / m_sqrt + phi);
     v_r(:, i) = v_to(i) * sin(p.t / m_sqrt + phi);
     a_r(:, i) = v_to(i) / m_sqrt * cos(p.t / m_sqrt + phi);
     
     t_to(i) = m_sqrt * (pi / 2 - phi);
+end
+
+x_l = x' * ones(1, num_mass);
+v_l = v' * ones(1, num_mass);
+a_l = a' * ones(1, num_mass);
+
+for m=1:num_mass
+    for t=1:num_times
+        if p.t(t) >= t_l(m)
+            x_l(t, m) = 0;
+            v_l(t, m) = 0;
+            a_l(t, m) = 0;
+        end
+    end
 end
 
 for m=1:num_mass
@@ -135,11 +132,9 @@ for m=1:num_mass
     end
 end
 
-x_tot = x + x_r + v_to .* (t-t_to)
-
 if(plot_xl)
     figure(5);
-    xr_plot = pcolor(p.m, p.t, x);
+    xr_plot = pcolor(p.m, p.t, x_l + x_r);
     set(gca,'XScale', 'log');
     set(xr_plot, 'EdgeColor', 'none');
     colorbar;
@@ -147,7 +142,7 @@ end
 
 if(plot_vl)
     figure(6);
-    vr_plot = pcolor(p.m, p.t, v);
+    vr_plot = pcolor(p.m, p.t, v_l + v_r);
     set(gca,'XScale', 'log');
     set(vr_plot, 'EdgeColor', 'none');
     colorbar;
@@ -155,31 +150,7 @@ end
 
 if(plot_al)
     figure(7);
-    ar_plot = pcolor(p.m, p.t, a);
-    set(gca,'XScale', 'log');
-    set(ar_plot, 'EdgeColor', 'none');
-    colorbar;
-end
-
-if(plot_xr)
-    figure(8);
-    xr_plot = pcolor(p.m, p.t, x_r);
-    set(gca,'XScale', 'log');
-    set(xr_plot, 'EdgeColor', 'none');
-    colorbar;
-end
-
-if(plot_vr)
-    figure(9);
-    vr_plot = pcolor(p.m, p.t, v_r);
-    set(gca,'XScale', 'log');
-    set(vr_plot, 'EdgeColor', 'none');
-    colorbar;
-end
-
-if(plot_ar)
-    figure(10);
-    ar_plot = pcolor(p.m, p.t, a_r);
+    ar_plot = pcolor(p.m, p.t, a_l + a_r);
     set(gca,'XScale', 'log');
     set(ar_plot, 'EdgeColor', 'none');
     colorbar;
