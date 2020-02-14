@@ -1,10 +1,11 @@
 clearvars;
 close all;
 
-plot_y = true;
-plot_x = true;
+plot_y = false;
+plot_x = false;
 plot_tl = true;
-plot_vto = true;
+plot_vto = false;
+plot_tto = true;
 plot_xl = true;
 plot_vl = true;
 plot_al = true;
@@ -17,35 +18,41 @@ y = min(p.v0 * p.t + 0.5 * p.F_l / p.m_l * (p.t.^2), p.R - eps);
 y_dot = p.v0 + p.F_l / p.m_l * p.t;
 y_ddot = p.F_l / p.m_l;
 
-if(plot_y)
+if plot_y
     figure(1);
     hold on;
-    plot(p.t, y);
-    plot(p.t, y_dot);
-    plot(p.t, y_ddot);
+    plot(p.t, y, 'b');
+    plot(p.t, y_dot, 'r');
+    plot(p.t, y_ddot, 'g');
+    title('y (horiz) kinematics of latch')
+    xlabel('t');
+    ylabel('pos (b), vel (r), acc (g)');
 end
 
 %% x position of projectile while in contact w/latch
 x = p.R * (1 - sqrt(1 - (y / p.R).^2));
 
-if(plot_x)
+if plot_x
     figure(2);
     hold on;
-    plot(p.t, x);
+    plot(p.t, x, 'b');
+    title('x kinematics of projectile in contact w/latch')
+    xlabel('t');
+    ylabel('pos (b), vel (r), acc (g)');
 end
 
 % v of projectile while in contact w/latch
 v = y .* y_dot ./ (p.R * sqrt(1 - (y / p.R).^2));
 
-if(plot_x)
-    plot(p.t, v);
+if plot_x
+    plot(p.t, v, 'r');
 end
 
 % a of projectile while in contact w/latch
 a = 1 ./ (p.R * sqrt(1 - (y / p.R).^2)) .* (y_dot.^2 + y .* y_ddot + y.^2 .* y_dot.^2 ./ (p.R^2 - y.^2));
 
-if(plot_x)
-%     plot(p.t, a);
+if plot_x
+%     plot(p.t, a, 'g');
 end
 
 %% calculates t_l, time of latch release
@@ -72,22 +79,28 @@ end
 
 t_l = p.t(t_l_index);
 
-if(plot_tl)
+if plot_tl
     figure(3);
     plot(p.m, t_l);
     set(gca,'XScale', 'log');
+    title('unlatching time')
+    xlabel('mass');
+    ylabel('t_l');
 end
 
 %% calculate v_to: velocity when projectile loses contact with spring
-xl = v(t_l_index);
+xl = x(t_l_index);
 vl = v(t_l_index);
 v_to = sqrt(vl.^2 + 1 ./ (p.m + p.m_spr / 3) .* (1 - xl).^2);
 
-if(plot_vto)
+if plot_vto
     figure(4);
     plot(p.m, v_to);
     set(gca,'XScale', 'log');
     set(gca,'YScale', 'log');
+    title('takeoff velocity')
+    xlabel('mass');
+    ylabel('v_{to}');
 end
 
 %% position after latch release
@@ -108,6 +121,16 @@ for i=1:num_mass
     t_to(i) = m_sqrt * (pi / 2 - phi);
 end
 
+if plot_tto
+    figure(5);
+    plot(p.m, t_to);
+    set(gca,'XScale', 'log');
+    set(gca,'YScale', 'log');
+    title('takeoff time')
+    xlabel('mass');
+    ylabel('t_{to}');
+end
+
 x_l = x' * ones(1, num_mass);
 v_l = v' * ones(1, num_mass);
 a_l = a' * ones(1, num_mass);
@@ -122,37 +145,75 @@ for m=1:num_mass
     end
 end
 
+t_to_index = ones(1, num_mass);
+for m=1:num_mass
+    min_diff = abs(t_to(m) - p.t(1));
+    for t=2:num_times
+        curr_diff = abs(t_to(m) - p.t(t));
+        if curr_diff < min_diff
+            t_to_index(m) = t;
+            min_diff = curr_diff;
+        end
+    end
+end
+
+xto = x(t_to_index);
+vto = v(t_to_index);
+
 for m=1:num_mass
     for t=1:num_times
-        if(p.t(t) < t_l(m) || p.t(t) > t_to(m))
+        if p.t(t) < t_l(m)
             x_r(t, m) = 0;
             v_r(t, m) = 0;
+            a_r(t, m) = 0;
+        end
+        if p.t(t) > t_to(m)
+            x_r(t, m) = xto(m) + vto(m) * (p.t(t) - t_to(m));
+            v_r(t, m) = vto(m);
             a_r(t, m) = 0;
         end
     end
 end
 
-if(plot_xl)
-    figure(5);
+if plot_xl
+    figure(6);
     xr_plot = pcolor(p.m, p.t, x_l + x_r);
     set(gca,'XScale', 'log');
     set(xr_plot, 'EdgeColor', 'none');
     colorbar;
+    title('x position of projectile')
+    xlabel('mass');
+    ylabel('t');
+    hold on;
+    plot(p.m, t_l, 'r');
+    plot(p.m, t_to, 'r');
 end
 
-if(plot_vl)
-    figure(6);
+if plot_vl
+    figure(7);
     vr_plot = pcolor(p.m, p.t, v_l + v_r);
     set(gca,'XScale', 'log');
     set(vr_plot, 'EdgeColor', 'none');
     colorbar;
+    title('vel of projectile')
+    xlabel('mass');
+    ylabel('t');
+    hold on;
+    plot(p.m, t_l, 'r');
+    plot(p.m, t_to, 'r');
 end
 
-if(plot_al)
-    figure(7);
+if plot_al
+    figure(8);
     ar_plot = pcolor(p.m, p.t, a_l + a_r);
     set(gca,'XScale', 'log');
     set(ar_plot, 'EdgeColor', 'none');
     colorbar;
+    title('accel of projectile')
+    xlabel('mass');
+    ylabel('t');
+    hold on;
+    plot(p.m, t_l, 'r');
+    plot(p.m, t_to, 'r');
 end
 
