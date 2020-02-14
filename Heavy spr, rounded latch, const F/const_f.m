@@ -4,7 +4,10 @@ close all;
 plot_y = false;
 plot_x = false;
 plot_tl = false;
-plot_vto = false;
+plot_vto = true;
+plot_xr = true;
+plot_vr = true;
+plot_ar = true;
 
 %% Load all parameters from a file
 p = load('params');
@@ -67,7 +70,7 @@ end
 % change those into times
 % if a root wasn't found, it'll default to t_l = 0
 
-t_l = p.t(t_l_index)
+t_l = p.t(t_l_index);
 
 if(plot_tl)
     figure(3);
@@ -85,4 +88,52 @@ if(plot_vto)
     plot(p.m, v_to);
     set(gca,'XScale', 'log');
     set(gca,'YScale', 'log');
+end
+
+%% position after latch release
+x_r = (ones(1, num_times))' * (1 * ones(1, num_mass));
+v_r = x_r;
+a_r = x_r;
+for i=1:num_mass
+    m = p.m(i);
+    m_sqrt = sqrt(m + p.m_spr / 3);
+    
+    phi = atan(m_sqrt * v_l(i) / (1 - x_l(i))) - (t_l(i)) ./ m_sqrt;
+    x_r(:, i) = 1 - v_to(i) * m_sqrt * cos(p.t / m_sqrt + phi);
+    v_r(:, i) = v_to(i) * sin(p.t / m_sqrt + phi);
+    a_r(:, i) = v_to(i) / m_sqrt * cos(p.t / m_sqrt + phi);
+end
+
+for m=1:num_mass
+    for t=1:num_times
+        if(p.t(t) < t_l(m))
+            x_r(t, m) = 0;
+            v_r(t, m) = 0;
+            a_r(t, m) = 0;
+        end
+    end
+end
+
+if(plot_xr)
+    figure(5);
+    xr_plot = pcolor(p.m, p.t, x_r);
+    set(gca,'XScale', 'log');
+    set(xr_plot, 'EdgeColor', 'none');
+    colorbar;
+end
+
+if(plot_vr)
+    figure(6);
+    vr_plot = pcolor(p.m, p.t, v_r);
+    set(gca,'XScale', 'log');
+    set(vr_plot, 'EdgeColor', 'none');
+    colorbar;
+end
+
+if(plot_ar)
+    figure(7);
+    ar_plot = pcolor(p.m, p.t, a_r);
+    set(gca,'XScale', 'log');
+    set(ar_plot, 'EdgeColor', 'none');
+    colorbar;
 end
