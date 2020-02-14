@@ -4,7 +4,10 @@ close all;
 plot_y = false;
 plot_x = false;
 plot_tl = false;
-plot_vto = true;
+plot_vto = false;
+plot_xl = true;
+plot_vl = true;
+plot_al = true;
 plot_xr = true;
 plot_vr = true;
 plot_ar = true;
@@ -78,6 +81,20 @@ if(plot_tl)
     set(gca,'XScale', 'log');
 end
 
+x = x' * ones(1, num_mass);
+v = v' * ones(1, num_mass);
+a = a' * ones(1, num_mass);
+
+for m=1:num_mass
+    for t=1:num_times
+        if p.t(t) >= t_l(m)
+            x(t, m) = 0;
+            v(t, m) = 0;
+            a(t, m) = 0;
+        end
+    end
+end
+
 %% calculate v_to: velocity when projectile loses contact with spring
 x_l = v(t_l_index);
 v_l = v(t_l_index);
@@ -94,6 +111,8 @@ end
 x_r = (ones(1, num_times))' * (1 * ones(1, num_mass));
 v_r = x_r;
 a_r = x_r;
+t_to = ones(1, num_mass);
+
 for i=1:num_mass
     m = p.m(i);
     m_sqrt = sqrt(m + p.m_spr / 3);
@@ -102,11 +121,13 @@ for i=1:num_mass
     x_r(:, i) = 1 - v_to(i) * m_sqrt * cos(p.t / m_sqrt + phi);
     v_r(:, i) = v_to(i) * sin(p.t / m_sqrt + phi);
     a_r(:, i) = v_to(i) / m_sqrt * cos(p.t / m_sqrt + phi);
+    
+    t_to(i) = m_sqrt * (pi / 2 - phi);
 end
 
 for m=1:num_mass
     for t=1:num_times
-        if(p.t(t) < t_l(m))
+        if(p.t(t) < t_l(m) || p.t(t) > t_to(m))
             x_r(t, m) = 0;
             v_r(t, m) = 0;
             a_r(t, m) = 0;
@@ -114,8 +135,34 @@ for m=1:num_mass
     end
 end
 
-if(plot_xr)
+x_tot = x + x_r + v_to .* (t-t_to)
+
+if(plot_xl)
     figure(5);
+    xr_plot = pcolor(p.m, p.t, x);
+    set(gca,'XScale', 'log');
+    set(xr_plot, 'EdgeColor', 'none');
+    colorbar;
+end
+
+if(plot_vl)
+    figure(6);
+    vr_plot = pcolor(p.m, p.t, v);
+    set(gca,'XScale', 'log');
+    set(vr_plot, 'EdgeColor', 'none');
+    colorbar;
+end
+
+if(plot_al)
+    figure(7);
+    ar_plot = pcolor(p.m, p.t, a);
+    set(gca,'XScale', 'log');
+    set(ar_plot, 'EdgeColor', 'none');
+    colorbar;
+end
+
+if(plot_xr)
+    figure(8);
     xr_plot = pcolor(p.m, p.t, x_r);
     set(gca,'XScale', 'log');
     set(xr_plot, 'EdgeColor', 'none');
@@ -123,7 +170,7 @@ if(plot_xr)
 end
 
 if(plot_vr)
-    figure(6);
+    figure(9);
     vr_plot = pcolor(p.m, p.t, v_r);
     set(gca,'XScale', 'log');
     set(vr_plot, 'EdgeColor', 'none');
@@ -131,9 +178,10 @@ if(plot_vr)
 end
 
 if(plot_ar)
-    figure(7);
+    figure(10);
     ar_plot = pcolor(p.m, p.t, a_r);
     set(gca,'XScale', 'log');
     set(ar_plot, 'EdgeColor', 'none');
     colorbar;
 end
+
