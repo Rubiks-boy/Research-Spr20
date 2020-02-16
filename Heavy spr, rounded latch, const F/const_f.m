@@ -157,8 +157,13 @@ for m=1:num_mass
     end
 end
 
-xto = x(t_to_index);
-vto = v(t_to_index);
+xto = 0 * ones(1, num_mass);
+vto = 0 * ones(1, num_mass);
+
+for m=1:num_mass
+    xto(m) = x_r(t_to_index(m), m);
+    vto(m) = v_r(t_to_index(m), m);
+end
 
 for m=1:num_mass
     for t=1:num_times
@@ -217,3 +222,12 @@ if plot_al
     plot(p.m, t_to, 'r');
 end
 
+if false
+    figure(9);
+    xyz_plot = pcolor(x_l + x_r, v_l + v_r, a_l + a_r);
+    set(xyz_plot, 'EdgeColor', 'none');
+    colorbar;
+    title('pos / vel / acc')
+    xlabel('pos');
+    ylabel('vel');
+end
