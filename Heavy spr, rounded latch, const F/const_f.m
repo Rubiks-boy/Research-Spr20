@@ -9,6 +9,7 @@ plot_tto = true;
 plot_xl = true;
 plot_vl = true;
 plot_al = true;
+plot_xva = true;
 
 %% Load all parameters from a file
 p = load('params');
@@ -222,7 +223,7 @@ if plot_al
     plot(p.m, t_to, 'r');
 end
 
-if false
+if plot_xva
     figure(9);
     xyz_plot = pcolor(x_l + x_r, v_l + v_r, a_l + a_r);
     set(xyz_plot, 'EdgeColor', 'none');
