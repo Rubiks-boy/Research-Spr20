@@ -35,19 +35,6 @@ if do_plot_tl
     plot_t_l(p, t_l, 3);
 end
 
-t_l_index = 1 * ones(1, num_mass);
-
-for m=1:num_mass
-    min_val = inf;
-    for i=1:num_times
-        cur_val = abs(p.t(i) - t_l(m));
-        if(cur_val < min_val)
-            t_l_index(m) = i;
-            min_val = cur_val;
-        end
-    end
-end
-
 %% calculate v_to: velocity when projectile loses contact with spring
 xl = calc_x_latched_t(p, t_l);
 vl = calc_v_latched_t(p, t_l);
@@ -113,9 +100,9 @@ for i=1:num_mass
     m_sqrt = sqrt(m + p.m_spr / 3);
     
     phi = atan(m_sqrt * vl(i) / (1 - xl(i))) - (t_l(i)) ./ m_sqrt;
-    x_r(:, i) = 1 - (v_to(i) * m_sqrt * cos(p.t(i) / m_sqrt + phi));
-    v_r(:, i) = v_to(i) * sin(p.t(i) / m_sqrt + phi);
-    a_r(:, i) = v_to(i) / m_sqrt * cos(p.t(i) / m_sqrt + phi);
+    x_r(:, i) = 1 - (v_to(i) * m_sqrt * cos(p.t(i, :) / m_sqrt + phi));
+    v_r(:, i) = v_to(i) * sin(p.t(i, :) / m_sqrt + phi);
+    a_r(:, i) = v_to(i) / m_sqrt * cos(p.t(i, :) / m_sqrt + phi);
 end
 
 x_l = x_latch.x';
@@ -124,7 +111,7 @@ a_l = x_latch.a';
 
 for m=1:num_mass
     for t=1:num_times
-        if p.t(t) >= t_l(m)
+        if p.t(m, t) >= t_l(m)
             x_l(t, m) = 0;
             v_l(t, m) = 0;
             a_l(t, m) = 0;
@@ -136,7 +123,7 @@ t_to_index = ones(1, num_mass);
 for m=1:num_mass
     min_diff = abs(t_to(m) - p.t(1));
     for t=2:num_times
-        curr_diff = abs(t_to(m) - p.t(t));
+        curr_diff = abs(t_to(m) - p.t(m, t));
         if curr_diff < min_diff
             t_to_index(m) = t;
             min_diff = curr_diff;
@@ -154,13 +141,13 @@ end
 
 for m=1:num_mass
     for t=1:num_times
-        if p.t(t) < t_l(m)
+        if p.t(m, t) < t_l(m)
             x_r(t, m) = 0;
             v_r(t, m) = 0;
             a_r(t, m) = 0;
         end
-        if p.t(t) > t_to(m)
-            x_r(t, m) = xto(m) + vto(m) * (p.t(t) - t_to(m));
+        if p.t(m, t) > t_to(m)
+            x_r(t, m) = xto(m) + vto(m) * (p.t(m, t) - t_to(m));
             v_r(t, m) = vto(m);
             a_r(t, m) = 0;
         end
@@ -168,37 +155,15 @@ for m=1:num_mass
 end
 
 if do_plot_xl
-    plot_xl(p, x_l + x_r, t_l, t_to, 10);
-    
     fancy_plot(p, p.t, x_l+x_r, 6);
 end
 
 if do_plot_vl
-    figure(7);
-    vr_plot = pcolor(p.m, p.t(end, :), v_l + v_r);
-    set(gca,'XScale', 'log');
-    set(vr_plot, 'EdgeColor', 'none');
-    colorbar;
-    title('vel of projectile')
-    xlabel('mass');
-    ylabel('t');
-    hold on;
-    plot(p.m, t_l, 'r');
-    plot(p.m, t_to, 'r');
+    fancy_plot(p, p.t, v_l+v_r, 7);
 end
 
 if do_plot_al
-    figure(8);
-    ar_plot = pcolor(p.m, p.t(end, :), repmat(p.m, [num_times 1]) .* (a_l + a_r));
-    set(gca,'XScale', 'log');
-    set(ar_plot, 'EdgeColor', 'none');
-    colorbar;
-    title('accel of projectile')
-    xlabel('mass');
-    ylabel('t');
-    hold on;
-    plot(p.m, t_l, 'r');
-    plot(p.m, t_to, 'r');
+    fancy_plot(p, p.t, a_l+a_r, 8);
 end
 
 if do_plot_xva
@@ -343,7 +308,6 @@ function plot_xl(p, x, t_l, t_to, fig_num)
 end
 
 function fancy_plot(p, t, x, fig_num)
-    [q, num_mass] = size(p.m);
     figure(fig_num);
     m = repmat(p.m, [p.num_times 1]);
     
@@ -357,9 +321,9 @@ function fancy_plot(p, t, x, fig_num)
     t_plot = t_plot(i);
     x_plot = x_plot(i);
     
-    figure(6);
-    [M, T] = meshgrid(logspace(-5, 5, num_mass), linspace(0, 5, p.num_times));
+    [M, T] = meshgrid(logspace(-5, 5, 1000), linspace(0, 50, 1000));
     inter = griddata(m_plot, t_plot, x_plot, M, T);
     imagesc([min(M(1, :)), max(M(1, :))], [min(T(:, 1)), max(T(:, 1))], inter);
-    set(gca,'YDir','normal');
+    set(gca, 'XScale', 'log');
+    set(gca, 'YDir','normal');
 end
