@@ -1,15 +1,15 @@
 clearvars;
 close all;
 
-do_plot_y = true;
-do_plot_x = true;
+do_plot_y = false;
+do_plot_x = false;
 do_plot_tl = true;
 do_plot_vto = true;
 do_plot_tto = true;
 do_plot_xl = true;
 do_plot_vl = true;
 do_plot_al = true;
-do_plot_xva = true;
+do_plot_xva = false;
 
 %% Load all parameters from a file
 p = load('params');
@@ -17,7 +17,6 @@ p = load('params');
 %% calculates t_l, time of latch release
 % do this for all masses (this is ok since previous expressions don't
 % depend on mass)
-% we'll use t_l to find time ranges for a given mass
 num_times = p.num_times;
 [q, num_mass] = size(p.m);
 
@@ -49,6 +48,37 @@ for m=1:num_mass
     end
 end
 
+%% calculate v_to: velocity when projectile loses contact with spring
+xl = calc_x_latched_t(p, t_l);
+vl = calc_v_latched_t(p, t_l);
+v_to = sqrt(vl.^2 + 1 ./ (p.m + p.m_spr / 3) .* (1 - xl).^2);
+
+if do_plot_vto
+    plot_vto(p, v_to, 4);
+end
+
+%% Calculates t_to, time of projectile release
+% we'll use t_to to find time ranges for a given mass
+t_to = ones(1, num_mass);
+
+for i=1:num_mass
+    m = p.m(i);
+    m_sqrt = sqrt(m + p.m_spr / 3);
+    
+    phi = atan(m_sqrt * vl(i) / (1 - xl(i))) - (t_l(i)) ./ m_sqrt;
+    
+    t_to(i) = m_sqrt * (pi / 2 - phi);
+end
+
+if do_plot_tto
+    plot_tto(p, t_to, 5);
+end
+
+p.t = ones(num_mass, p.num_times);
+for i=1:num_mass
+    p.t(i, :) = (linspace(0, (t_to(i) + t_l(i)) * p.t_perc_above, p.num_times))';
+end
+
 %% y (horizontal) position of latch, wrt time
 y = struct();
 y.y = calc_y(p, p.t);
@@ -73,40 +103,24 @@ if do_plot_x
     plot_x(p, x_latch, 2);
 end
 
-%% calculate v_to: velocity when projectile loses contact with spring
-xl = x_latch.x(t_l_index);
-vl = x_latch.v(t_l_index);
-v_to = sqrt(vl.^2 + 1 ./ (p.m + p.m_spr / 3) .* (1 - xl).^2);
-
-if do_plot_vto
-    plot_vto(p, v_to, 4);
-end
-
 %% position after latch release
 x_r = (ones(1, num_times))' * (1 * ones(1, num_mass));
 v_r = x_r;
 a_r = x_r;
-t_to = ones(1, num_mass);
 
 for i=1:num_mass
     m = p.m(i);
     m_sqrt = sqrt(m + p.m_spr / 3);
     
     phi = atan(m_sqrt * vl(i) / (1 - xl(i))) - (t_l(i)) ./ m_sqrt;
-    x_r(:, i) = 1 - (v_to(i) * m_sqrt * cos(p.t / m_sqrt + phi));
-    v_r(:, i) = v_to(i) * sin(p.t / m_sqrt + phi);
-    a_r(:, i) = v_to(i) / m_sqrt * cos(p.t / m_sqrt + phi);
-    
-    t_to(i) = m_sqrt * (pi / 2 - phi);
+    x_r(:, i) = 1 - (v_to(i) * m_sqrt * cos(p.t(i) / m_sqrt + phi));
+    v_r(:, i) = v_to(i) * sin(p.t(i) / m_sqrt + phi);
+    a_r(:, i) = v_to(i) / m_sqrt * cos(p.t(i) / m_sqrt + phi);
 end
 
-if do_plot_tto
-    plot_tto(p, t_to, 5);
-end
-
-x_l = x_latch.x' * ones(1, num_mass);
-v_l = x_latch.v' * ones(1, num_mass);
-a_l = x_latch.a' * ones(1, num_mass);
+x_l = x_latch.x';
+v_l = x_latch.v';
+a_l = x_latch.a';
 
 for m=1:num_mass
     for t=1:num_times
@@ -159,7 +173,7 @@ end
 
 if do_plot_vl
     figure(7);
-    vr_plot = pcolor(p.m, p.t, v_l + v_r);
+    vr_plot = pcolor(p.m, p.t(end, :), v_l + v_r);
     set(gca,'XScale', 'log');
     set(vr_plot, 'EdgeColor', 'none');
     colorbar;
@@ -173,7 +187,7 @@ end
 
 if do_plot_al
     figure(8);
-    ar_plot = pcolor(p.m, p.t, repmat(p.m, [num_times 1]) .* (a_l + a_r));
+    ar_plot = pcolor(p.m, p.t(end, :), repmat(p.m, [num_times 1]) .* (a_l + a_r));
     set(gca,'XScale', 'log');
     set(ar_plot, 'EdgeColor', 'none');
     colorbar;
@@ -307,7 +321,7 @@ end
 
 function plot_xl(p, x, t_l, t_to, fig_num)
     figure(fig_num);
-    xr_plot = pcolor(p.m, p.t, x);
+    xr_plot = pcolor(p.m, p.t(end, :), x);
     set(gca,'XScale', 'log');
     set(xr_plot, 'EdgeColor', 'none');
     colorbar;
