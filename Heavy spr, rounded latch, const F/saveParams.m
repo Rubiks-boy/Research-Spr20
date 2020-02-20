@@ -9,7 +9,7 @@ p.v0 = 1;
 p.F_l = 0;
 p.m_l = 1000000;
 p.R = 3;
-p.num_times = 100;
+p.num_times = 1000;
 p.t = linspace(0, 10, p.num_times); % MUST start at 0
 p.t_perc_above = 1.2; % How far above t_to + t_l to find values for projectile motion
 
