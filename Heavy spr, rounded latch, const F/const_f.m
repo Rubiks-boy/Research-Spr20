@@ -14,34 +14,11 @@ do_plot_xva = true;
 %% Load all parameters from a file
 p = load('params');
 
-%% y (horizontal) position of latch, wrt time
-y = struct();
-y.y = calc_y(p, p.t);
-y.y_dot = calc_y_dot(p, p.t);
-y.y_ddot = calc_y_ddot(p, p.t);
-
-if do_plot_y
-    plot_y(p, y, 1);
-end
-
-%% x position of projectile while in contact w/latch
-x_latch = struct();
-x_latch.x = calc_x_latched(p, y);
-
-% v of projectile while in contact w/latch
-x_latch.v = calc_v_latched(p, y);
-
-% a of projectile while in contact w/latch
-x_latch.a = calc_a_latched(p, y);
-
-if do_plot_x
-    plot_x(p, x_latch, 2);
-end
-
 %% calculates t_l, time of latch release
 % do this for all masses (this is ok since previous expressions don't
 % depend on mass)
-[q, num_times] = size(p.t);
+% we'll use t_l to find time ranges for a given mass
+num_times = p.num_times;
 [q, num_mass] = size(p.m);
 
 t_l = ones(size(p.m));
@@ -70,6 +47,30 @@ for m=1:num_mass
             min_val = cur_val;
         end
     end
+end
+
+%% y (horizontal) position of latch, wrt time
+y = struct();
+y.y = calc_y(p, p.t);
+y.y_dot = calc_y_dot(p, p.t);
+y.y_ddot = calc_y_ddot(p, p.t);
+
+if do_plot_y
+    plot_y(p, y, 1);
+end
+
+%% x position of projectile while in contact w/latch
+x_latch = struct();
+x_latch.x = calc_x_latched(p, y);
+
+% v of projectile while in contact w/latch
+x_latch.v = calc_v_latched(p, y);
+
+% a of projectile while in contact w/latch
+x_latch.a = calc_a_latched(p, y);
+
+if do_plot_x
+    plot_x(p, x_latch, 2);
 end
 
 %% calculate v_to: velocity when projectile loses contact with spring
