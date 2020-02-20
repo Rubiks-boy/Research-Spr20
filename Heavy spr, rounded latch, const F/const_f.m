@@ -6,9 +6,9 @@ do_plot_x = false;
 do_plot_tl = false;
 do_plot_vto = false;
 do_plot_tto = false;
-do_plot_xl = true;
-do_plot_vl = true;
-do_plot_al = true;
+do_plot_xl = false;
+do_plot_vl = false;
+do_plot_al = false;
 do_plot_xva = true;
 
 %% Load all parameters from a file
@@ -170,8 +170,8 @@ if do_plot_xva
     figure(9);
     x = x_l + x_r;
     v = v_l + v_r;
-%     f = repmat(p.m, [num_times 1]) .* (a_l + a_r);
-    f = (a_l + a_r);
+    f = repmat(p.m, [num_times 1]) .* (a_l + a_r);
+%     f = (a_l + a_r);
     x = x(:);
     v = v(:);
     f = f(:);
@@ -189,11 +189,11 @@ if do_plot_xva
         end
     end
     
-    [X, V] = meshgrid(linspace(0, 1, 1000), linspace(0, 25, 1000));
+    [X, V] = meshgrid(linspace(0, 1.5, 500), linspace(0, 1.5, 1000));
     inter = griddata(x, v, f, X, V);
     imagesc([min(X(1, :)), max(X(1, :))], [min(V(:, 1)), max(V(:, 1))], inter);
     set(gca,'YDir','normal');
-
+    colorbar;
 end
 
 %% Calculations
@@ -326,4 +326,5 @@ function fancy_plot(p, t, x, fig_num)
     imagesc([min(M(1, :)), max(M(1, :))], [min(T(:, 1)), max(T(:, 1))], inter);
     set(gca, 'XScale', 'log');
     set(gca, 'YDir','normal');
+    colorbar;
 end
