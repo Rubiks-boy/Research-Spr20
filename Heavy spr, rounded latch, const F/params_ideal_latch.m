@@ -1,6 +1,7 @@
 clearvars;
 close all;
 
+%% params for ideal latch, constant velocity (like pg 4 supplemental)
 p = struct;
 p.m = logspace(-5, 5, 500);
 p.m_spr = 0.5;
