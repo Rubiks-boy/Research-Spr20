@@ -105,6 +105,8 @@ for i=1:num_mass
     a_r(:, i) = v_to(i) / m_sqrt * cos(p.t(i, :) / m_sqrt + phi);
 end
 
+% kinematics while in contact with latch
+% we will remove any values after t_l
 x_l = x_latch.x';
 v_l = x_latch.v';
 a_l = x_latch.a';
