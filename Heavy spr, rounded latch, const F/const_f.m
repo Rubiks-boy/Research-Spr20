@@ -3,13 +3,13 @@ close all;
 
 do_plot_y = false;
 do_plot_x = false;
-do_plot_tl = true;
-do_plot_vto = true;
-do_plot_tto = true;
+do_plot_tl = false;
+do_plot_vto = false;
+do_plot_tto = false;
 do_plot_xl = true;
 do_plot_vl = true;
 do_plot_al = true;
-do_plot_xva = false;
+do_plot_xva = true;
 
 %% Load all parameters from a file
 p = load('params');
@@ -168,7 +168,9 @@ for m=1:num_mass
 end
 
 if do_plot_xl
-    plot_xl(p, x_l + x_r, t_l, t_to, 6);
+    plot_xl(p, x_l + x_r, t_l, t_to, 10);
+    
+    fancy_plot(p, p.t, x_l+x_r, 6);
 end
 
 if do_plot_vl
@@ -203,7 +205,8 @@ if do_plot_xva
     figure(9);
     x = x_l + x_r;
     v = v_l + v_r;
-    f = repmat(p.m, [num_times 1]) .* (a_l + a_r);
+%     f = repmat(p.m, [num_times 1]) .* (a_l + a_r);
+    f = (a_l + a_r);
     x = x(:);
     v = v(:);
     f = f(:);
@@ -215,10 +218,16 @@ if do_plot_xva
     v = v(i);
     f = f(i);
     
-    [X, V] = meshgrid(linspace(0, 1, 100), linspace(0, 1, 100));
+    for i=1:size(v)
+        if v(i) == Inf
+            v(i) = 0;
+        end
+    end
+    
+    [X, V] = meshgrid(linspace(0, 1, 1000), linspace(0, 25, 1000));
     inter = griddata(x, v, f, X, V);
     imagesc([min(X(1, :)), max(X(1, :))], [min(V(:, 1)), max(V(:, 1))], inter);
-    set(gca,'YDir','normal')
+    set(gca,'YDir','normal');
 
 end
 
@@ -331,4 +340,26 @@ function plot_xl(p, x, t_l, t_to, fig_num)
     hold on;
     plot(p.m, t_l, 'r');
     plot(p.m, t_to, 'r');
+end
+
+function fancy_plot(p, t, x, fig_num)
+    [q, num_mass] = size(p.m);
+    figure(fig_num);
+    m = repmat(p.m, [p.num_times 1]);
+    
+    m_plot = m(:);
+    t_plot = t';
+    t_plot = t_plot(:);
+    x_plot = x;
+    x_plot = x_plot(:);
+
+    [m_plot, i] = sort(m_plot);
+    t_plot = t_plot(i);
+    x_plot = x_plot(i);
+    
+    figure(6);
+    [M, T] = meshgrid(logspace(-5, 5, num_mass), linspace(0, 5, p.num_times));
+    inter = griddata(m_plot, t_plot, x_plot, M, T);
+    imagesc([min(M(1, :)), max(M(1, :))], [min(T(:, 1)), max(T(:, 1))], inter);
+    set(gca,'YDir','normal');
 end
