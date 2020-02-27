@@ -3,7 +3,7 @@ close all;
 
 do_plot_y = false;
 do_plot_x = false;
-do_plot_tl = false;
+do_plot_tl = true;
 do_plot_vto = false;
 do_plot_tto = false;
 do_plot_xl = false;
@@ -195,6 +195,8 @@ if do_plot_xva
     inter = griddata(x, v, f, X, V);
     imagesc([min(X(1, :)), max(X(1, :))], [min(V(:, 1)), max(V(:, 1))], inter);
     set(gca,'YDir','normal');
+    % TODO: Plot different masses
+    % TODO: cut off plot
     colorbar;
 end
 
