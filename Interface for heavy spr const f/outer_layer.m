@@ -1,23 +1,29 @@
 clearvars;
 close all;
 
+tic;
 p_d = load('params');
+disp('Loaded params from file');
+toc;
 
-x = 1
-tic
+tic;
 p_dl = convert_to_dl(p_d);
-toc
-x = 2
+disp('non-dimensionalized parameters');
+toc;
+
 tic
 results = find_movement_dl(p_dl);
+disp('Ran calculations for motion of projectile');
 toc
-x = 3
+
 tic
 results_d = convert_to_d(p_d, results);
+disp('Re-dimensionalized results');
 toc
-x = 4
+
 tic
 plot_xva(p_d, results_d);
+disp('Made plot');
 toc
 
 function p_dl = convert_to_dl(p_d)
@@ -53,7 +59,7 @@ function results_d = convert_to_d(p_d, results)
 end
 
 function plot_xva(p_d, results)
-    tic
+    tic;
     figure(1);
     x = results.x;
     v = results.v;
@@ -75,35 +81,40 @@ function plot_xva(p_d, results)
             v(i) = 0;
         end
     end
-    toc
-    tic
     
-    [X, V] = meshgrid(linspace(0, p_d.x_range, 500), linspace(0, p_d.v_range, 500));
+    disp('Prepared data for interpolation');
+    toc;
+    
+    tic;
+    [X, V] = meshgrid(linspace(0, p_d.x_range, p_d.pic_width), linspace(0, p_d.v_range, p_d.pic_height));
     inter = griddata(x, v, f, X, V);
-    
+    disp('Done with interpolation');
     toc
-    x = 6
-    tic
     
-    for i=1:p_d.pic_size
-        for j=1:p_d.pic_size
-            if p_d.x_range / p_d.pic_size * j > p_d.d
+    tic
+    for i=1:p_d.pic_height
+        for j=1:p_d.pic_width
+            if p_d.x_range / p_d.pic_width * j > p_d.d
                 inter(i, j) = 0;
             end
-            for k=1:1000
-                if p_d.v_range / p_d.pic_size * j < results.x(1, k) && 30 / p_d.pic_size * i > results.v(1, k)
+            for k=1:p_d.num_times
+                if p_d.v_range / p_d.pic_height * i > results.v(1, k) && p_d.x_range / p_d.pic_width * j < results.x(1, k)
                     inter(i, j) = 0;
                     break;
                 end
             end
         end
     end
-    
+    disp('Zeroed data outside logical range');
     toc
 
     tic
     imagesc([min(X(1, :)), max(X(1, :))], [min(V(:, 1)), max(V(:, 1))], inter);
     set(gca,'YDir','normal');
     colorbar;
+    title('Force on projectile');
+    xlabel('Position (m)');
+    ylabel('Velocity (m/s)');
+    disp('Displaying plot');
     toc
 end
