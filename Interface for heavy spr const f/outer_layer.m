@@ -91,14 +91,19 @@ function plot_xva(p_d, results)
     inter = griddata(x, v, f, X, V);
     disp('Done with interpolation');
     toc
-    
     tic
+    
+    num_in_range = floor(p_d.d / p_d.x_range * p_d.pic_width);
+    in_range = [true(num_in_range, p_d.pic_height); false(p_d.pic_width - num_in_range, p_d.pic_height)]';
+    inter = inter .* in_range;
+    
+    first_mass_x = results.x(1, :);
+    [q, max_t] = size(first_mass_x(first_mass_x <= p_d.x_range));
+    
+    
     for i=1:p_d.pic_height
         for j=1:p_d.pic_width
-            if p_d.x_range / p_d.pic_width * j > p_d.d
-                inter(i, j) = 0;
-            end
-            for k=1:p_d.num_times
+            for k=1:max_t
                 if p_d.v_range / p_d.pic_height * i > results.v(1, k) && p_d.x_range / p_d.pic_width * j < results.x(1, k)
                     inter(i, j) = 0;
                     break;
