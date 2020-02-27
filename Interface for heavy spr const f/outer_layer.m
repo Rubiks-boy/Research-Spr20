@@ -1,20 +1,7 @@
 clearvars;
 close all;
 
-p_d = struct;
-p_d.F_max = 20;                  % Max force the motor can provide
-p_d.v_max = 5;                  % Fastest motor velocity
-p_d.d = 0.005;                      % Range of motion of motor
-
-p_d.m = logspace(-7, 3, 100000);   % Mass range of projectiles to simulate
-p_d.F_l = eps;                    % Force latch is pulled with
-p_d.m_l = 9999999;                    % Mass of the latch
-p_d.m_spr = 0.0001;                  % Mass of the spring
-p_d.v0 = 0.25;                     % Initial velocity of the latch
-p_d.R = 0.002;                      % Radius of the latch
-
-p_d.num_times = 10000;           % How many times to run on
-p_d.t_perc_above = 1;         % How far above t_to + t_l to find values for motion
+p_d = load('params');
 
 x = 1
 tic
@@ -91,20 +78,20 @@ function plot_xva(p_d, results)
     toc
     tic
     
-    [X, V] = meshgrid(linspace(0, 0.006, 500), linspace(0, 30, 500));
+    [X, V] = meshgrid(linspace(0, p_d.x_range, 500), linspace(0, p_d.v_range, 500));
     inter = griddata(x, v, f, X, V);
     
     toc
     x = 6
     tic
     
-    for i=1:500
-        for j=1:500
-            if 0.006 / 500 * j > p_d.d
+    for i=1:p_d.pic_size
+        for j=1:p_d.pic_size
+            if p_d.x_range / p_d.pic_size * j > p_d.d
                 inter(i, j) = 0;
             end
             for k=1:1000
-                if 0.006 / 500 * j < results.x(1, k) && 30 / 500 * i > results.v(1, k)
+                if p_d.v_range / p_d.pic_size * j < results.x(1, k) && 30 / p_d.pic_size * i > results.v(1, k)
                     inter(i, j) = 0;
                     break;
                 end
