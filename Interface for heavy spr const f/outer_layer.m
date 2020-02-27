@@ -21,10 +21,7 @@ results_d = convert_to_d(p_d, results);
 disp('Re-dimensionalized results');
 toc
 
-tic
 plot_xva(p_d, results_d);
-disp('Made plot');
-toc
 
 function p_dl = convert_to_dl(p_d)
     p_dl = struct;
@@ -75,6 +72,10 @@ function plot_xva(p_d, results)
     [x, i] = sort(x);
     v = v(i);
     f = f(i);
+    
+    x = x(x <= p_d.x_range);
+    v = v(1:size(x));
+    f = f(1:size(x));
     
     for i=1:size(v)
         if v(i) == Inf
