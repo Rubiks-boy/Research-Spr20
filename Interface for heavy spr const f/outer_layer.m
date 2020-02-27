@@ -6,24 +6,32 @@ p_d.F_max = 20;                  % Max force the motor can provide
 p_d.v_max = 5;                  % Fastest motor velocity
 p_d.d = 0.005;                      % Range of motion of motor
 
-p_d.m = logspace(-4, -2, 500);   % Mass range of projectiles to simulate
-p_d.F_l = 0.00001;                    % Force latch is pulled with
+p_d.m = logspace(-7, 3, 100000);   % Mass range of projectiles to simulate
+p_d.F_l = eps;                    % Force latch is pulled with
 p_d.m_l = 9999999;                    % Mass of the latch
 p_d.m_spr = 0.0001;                  % Mass of the spring
-p_d.v0 = 5;                     % Initial velocity of the latch
-p_d.R = 0.0002;                      % Radius of the latch
+p_d.v0 = 0.25;                     % Initial velocity of the latch
+p_d.R = 0.002;                      % Radius of the latch
 
-p_d.num_times = 1000;           % How many times to run on
-p_d.t_perc_above = 1.2;         % How far above t_to + t_l to find values for motion
+p_d.num_times = 10000;           % How many times to run on
+p_d.t_perc_above = 1;         % How far above t_to + t_l to find values for motion
 
-
+x = 1
+tic
 p_dl = convert_to_dl(p_d);
-
+toc
+x = 2
+tic
 results = find_movement_dl(p_dl);
-
+toc
+x = 3
+tic
 results_d = convert_to_d(p_d, results);
-
-plot_xva(results_d);
+toc
+x = 4
+tic
+plot_xva(p_d, results_d);
+toc
 
 function p_dl = convert_to_dl(p_d)
     p_dl = struct;
@@ -57,11 +65,13 @@ function results_d = convert_to_d(p_d, results)
     results_d.f = results.f * p_d.F_max;
 end
 
-function plot_xva(results)
+function plot_xva(p_d, results)
+    tic
     figure(1);
     x = results.x;
     v = results.v;
     f = results.f;
+    f(1, :) = f(1, :);
     x = x(:);
     v = v(:);
     f = f(:);
@@ -78,12 +88,35 @@ function plot_xva(results)
             v(i) = 0;
         end
     end
+    toc
+    tic
     
-    [X, V] = meshgrid(linspace(0, 0.006, 500), linspace(0, 30, 1000));
+    [X, V] = meshgrid(linspace(0, 0.006, 500), linspace(0, 30, 500));
     inter = griddata(x, v, f, X, V);
+    
+    toc
+    x = 6
+    tic
+    
+    for i=1:500
+        for j=1:500
+            if 0.006 / 500 * j > p_d.d
+                inter(i, j) = 0;
+            end
+            for k=1:1000
+                if 0.006 / 500 * j < results.x(1, k) && 30 / 500 * i > results.v(1, k)
+                    inter(i, j) = 0;
+                    break;
+                end
+            end
+        end
+    end
+    
+    toc
+
+    tic
     imagesc([min(X(1, :)), max(X(1, :))], [min(V(:, 1)), max(V(:, 1))], inter);
     set(gca,'YDir','normal');
-    % TODO: Plot different masses
-    % TODO: cut off plot
     colorbar;
+    toc
 end
