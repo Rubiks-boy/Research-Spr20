@@ -77,11 +77,7 @@ function plot_xva(p_d, results)
     v = v(1:size(x));
     f = f(1:size(x));
     
-    for i=1:size(v)
-        if v(i) == Inf
-            v(i) = 0;
-        end
-    end
+    v(find(v == Inf)) = 0;
     
     disp('Prepared data for interpolation');
     toc;
@@ -99,17 +95,9 @@ function plot_xva(p_d, results)
     
     first_mass_x = results.x(1, :);
     [q, max_t] = size(first_mass_x(first_mass_x <= p_d.x_range));
-    
-    
-    for i=1:p_d.pic_height
-        for j=1:p_d.pic_width
-            for k=1:max_t
-                if p_d.v_range / p_d.pic_height * i > results.v(1, k) && p_d.x_range / p_d.pic_width * j < results.x(1, k)
-                    inter(i, j) = 0;
-                    break;
-                end
-            end
-        end
+
+    for k=1:max_t
+        inter(V > results.v(1, k) & X < results.x(1, k)) = 0;
     end
     disp('Zeroed data outside logical range');
     toc

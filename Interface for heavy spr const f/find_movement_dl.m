@@ -15,10 +15,18 @@ function results = find_movement_dl(p)
         zero_func = @(t) ((p.m(m) + p.m_spr/3) .* calc_a_latched_t(p, t) + calc_x_latched_t(p, t) - 1);
 
         % if a root wasn't found, it'll default to t_l = 0
-        t_l(m) = max(fzero(zero_func, opt_vec), 0);
+        % TODO: why are indices 613-617 doing this?
+        % could do a vector and binary search for the t_l
+        % tmax = R/vl = latch is compeltely out of the way
+        % find(thing < 0, 1 first) where zerofunc goes <0
+        if p.v0^2 >= p.R / (p.m(m) + p.m_spr / 3)
+            t_l(m) = 0;
+        else
+            t_l(m) = fzero(zero_func, opt_vec);
+        end
     end
 
-    results.t_l = t_l;
+    results.t_l = abs(t_l);
 
     %% calculate v_to: velocity when projectile loses contact with spring
     xl = calc_x_latched_t(p, t_l);
@@ -44,7 +52,7 @@ function results = find_movement_dl(p)
     %% use t_to to find time ranges for a given mass
     p.t = ones(num_mass, p.num_times);
     for i=1:num_mass
-        p.t(i, :) = (linspace(0, (t_to(i) + t_l(i)) * p.t_perc_above, p.num_times))';
+        p.t(i, :) = (linspace(0, (t_to(i)) * p.t_perc_above, p.num_times))';
     end
 
     %% y (horizontal) position of latch, wrt time
