@@ -1,21 +1,61 @@
 clearvars;
 close all;
 
-%% params for slowly removed rounded latch (like pg 6 supplemental)
-p = struct;
-p.m = logspace(-5, 5, 500);
-p.m_spr = 0.5;
-p.v0 = 0.25;
-p.F_l = 0;
-p.m_l = 1000000;
-p.R = 1;
-p.num_times = 1000;
-p.t = linspace(0, 10, p.num_times); % MUST start at 0
-p.t_perc_above = 1.2; % How far above t_to + t_l to find values for projectile motion
+p_d = struct;
+p_d.F_max = 20;                  % Max force the motor can provide
+p_d.v_max = 5;                  % Fastest motor velocity
+p_d.d = 0.005;                      % Range of motion of motor
 
-results = find_movement_dl(p);
+p_d.m = logspace(-4, -2, 500);   % Mass range of projectiles to simulate
+p_d.F_l = 0.00001;                    % Force latch is pulled with
+p_d.m_l = 9999999;                    % Mass of the latch
+p_d.m_spr = 0.0001;                  % Mass of the spring
+p_d.v0 = 5;                     % Initial velocity of the latch
+p_d.R = 0.0002;                      % Radius of the latch
 
-plot_xva(results);
+p_d.num_times = 1000;           % How many times to run on
+p_d.t_perc_above = 1.2;         % How far above t_to + t_l to find values for motion
+
+
+p_dl = convert_to_dl(p_d);
+
+results = find_movement_dl(p_dl);
+
+results_d = convert_to_d(p_d, results);
+
+plot_xva(results_d);
+
+function p_dl = convert_to_dl(p_d)
+    p_dl = struct;
+    
+    p_dl.t_perc_above = p_d.t_perc_above;
+    p_dl.num_times = p_d.num_times;
+    
+    p_dl.F_max = p_d.F_max;
+    p_dl.v_max = p_d.v_max;
+    p_dl.d = p_d.d; 
+    
+    p_dl.F_l = p_d.F_l / p_d.F_max;
+    p_dl.m_l = p_d.m_l * p_d.v_max^2 / (p_d.F_max * p_d.d);
+    p_dl.m_spr = p_d.m_spr * p_d.v_max^2 / (p_d.F_max * p_d.d);
+    p_dl.m = p_d.m * p_d.v_max^2 / (p_d.F_max * p_d.d);
+    p_dl.v0 = p_d.v0 / p_d.v_max;
+    p_dl.R = p_d.R / p_d.d;
+end
+
+function results_d = convert_to_d(p_d, results)
+    results_d = struct;
+    
+    results_d.t_l = results.t_l * p_d.d / p_d.v_max;
+    results_d.v_to = results.v_to * p_d.v_max;
+    results_d.t_to = results.t_to * p_d.d / p_d.v_max;
+    results_d.y = results.y * p_d.d;
+    results_d.t = results.t * p_d.d / p_d.v_max;
+    results_d.x = results.x * p_d.d;
+    results_d.v = results.v * p_d.v_max;
+    results_d.a = results.a * p_d.v_max^2 / p_d.d;
+    results_d.f = results.f * p_d.F_max;
+end
 
 function plot_xva(results)
     figure(1);
@@ -39,7 +79,7 @@ function plot_xva(results)
         end
     end
     
-    [X, V] = meshgrid(linspace(0, 1.5, 500), linspace(0, 1.5, 1000));
+    [X, V] = meshgrid(linspace(0, 0.006, 500), linspace(0, 30, 1000));
     inter = griddata(x, v, f, X, V);
     imagesc([min(X(1, :)), max(X(1, :))], [min(V(:, 1)), max(V(:, 1))], inter);
     set(gca,'YDir','normal');
