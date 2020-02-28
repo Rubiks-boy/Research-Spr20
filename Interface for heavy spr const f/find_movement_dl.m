@@ -25,7 +25,8 @@ function results = find_movement_dl(p)
             t_l(m) = fzero(zero_func, opt_vec);
         end
     end
-
+    
+    t_l(isnan(t_l)) = 0;
     results.t_l = abs(t_l);
 
     %% calculate v_to: velocity when projectile loses contact with spring
