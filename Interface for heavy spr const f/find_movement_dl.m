@@ -38,7 +38,7 @@ function results = find_movement_dl(p)
 
     for i=1:num_mass
         m = p.m(i);
-        m_sqrt = sqrt(m + p.m_spr / 3);
+        m_sqrt = sqrt(m + p.m_spr / 3) / sqrt(p.k);
 
         phi = atan(m_sqrt * vl(i) / (1 - xl(i))) - (t_l(i)) ./ m_sqrt;
 
