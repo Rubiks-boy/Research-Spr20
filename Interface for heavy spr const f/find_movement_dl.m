@@ -10,7 +10,7 @@ function results = find_movement_dl(p)
     t_l = ones(size(p.m));
     
     for m=1:num_mass
-        opt_start = 1;
+        opt_start = -eps;
         opt_vec = ones(size(m)) * opt_start;
         zero_func = @(t) ((p.m(m) + p.m_spr/3) .* calc_a_latched_t(p, t) + calc_x_latched_t(p, t) - 1);
 
