@@ -33,6 +33,8 @@ function p_dl = convert_to_dl(p_d)
     p_dl.v_max = p_d.v_max;
     p_dl.d = p_d.d; 
     
+    p_dl.k = (p_d.E * p_d.A / p_d.L) * p_d.d / p_d.F_max;
+    
     p_dl.F_l = p_d.F_l / p_d.F_max;
     p_dl.m_l = p_d.m_l * p_d.v_max^2 / (p_d.F_max * p_d.d);
     p_dl.m_spr = p_d.m_spr * p_d.v_max^2 / (p_d.F_max * p_d.d);

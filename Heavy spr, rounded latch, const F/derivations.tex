@@ -12,7 +12,8 @@
 
 \begin{document}
 \begin{center}
-Ideal F-v motor, Heavy Spring, Rounded Latch @ Constant Force
+    Ideal F-v motor, Heavy Spring, Rounded Latch @ Constant Force \\
+    30 Jan 2020
 \end{center}
 
 \noindent \textbf{Parameters:}
@@ -86,4 +87,49 @@ Equations 61-67 in supplemental.
 \[
     v(t) = v_{\text{to}}
 \]
+
+\newpage
+\begin{center}
+    Ideal F-v motor, Heavy Spring, Rounded Latch @ Constant Force \\
+    27 Feb 2020
+\end{center}
+
+\noindent
+Before, all derivations assumed an ideal $k$ value for the spring; i.e. $k_{ideal} = F_{max} / d$. Now, we will mdoify these derivations for a non-ideal spring stiffness. \newline
+
+\noindent \textbf{New Parameters:}
+\newline
+$E$, young's modulus (stiffness of material) \newline
+$A$, cross-sectional area of spring \newline
+$L$, rest length of the spring \newline
+$k = \frac{EA}{L}$ \newline
+
+\noindent \textbf{Dimensionless values:} 
+\newline
+$\tilde{k} = \frac{k}{k_{ideal}} = \frac{kd}{F_{max}}$
+\newline
+\newline
+\noindent \textbf{Solving for time of latch release $t_l$}
+\newline
+Modifying the potential energy to include $\tilde{k}$,
+\[
+    \frac{1}{2}\tilde{k}(1-\tilde{x})^2 + \frac{1}{2}\left(\tilde{m} + \frac{\tilde{m}_{\text{spr}}}{3} \right)\tilde{v}^2 - \int_0^{\tilde{x}} \! f_{\text{latch}}(x') \, \mathrm{d}x' = constant. 
+\]
+\[
+    \rightarrow \left(\tilde{m} + \frac{\tilde{m}_{\text{spr}}}{3} \right)\tilde{a}(\tilde{t_l}) = \tilde{k} \biggl( 1 - \tilde{x}(\tilde{t_l}) \biggr)
+\]
+\newline 
+\newline
+\noindent \textbf{Solving for velocity at takeoff $v_{\text{to}}$:}
+\newline
+\[
+    \tilde{v_{\text{to}}} = \sqrt{\tilde{v_l}^2 + \frac{\tilde{k}}{\tilde{m} + \frac{\tilde{m}_{\text{spr}}}{3}} (1 - \tilde{x_l})^2}
+\]
+\newline 
+\newline
+\noindent \textbf{After latch release $t_l < t < t_{\text{to}}$:}
+\newline
+In equations 61-67 in supplemental, replace $\tilde{m} + \frac{\tilde{m}_{spr}}{3}$ terms with $(\tilde{m} + \frac{\tilde{m}_{spr}}{3}) / \tilde{k}$
+\newline
+
 \end{document}

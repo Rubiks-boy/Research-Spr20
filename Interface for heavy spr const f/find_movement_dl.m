@@ -12,12 +12,12 @@ function results = find_movement_dl(p)
     for m=1:num_mass
         opt_start = -eps;
         opt_vec = ones(size(m)) * opt_start;
-        zero_func = @(t) ((p.m(m) + p.m_spr/3) .* calc_a_latched_t(p, t) + calc_x_latched_t(p, t) - 1);
+        zero_func = @(t) ((p.m(m) + p.m_spr/3) .* calc_a_latched_t(p, t) + p.k * (calc_x_latched_t(p, t) - 1));
 
         % checks if the latch is moving at greater than the philir velocity
         % (philir.pdf in posm g-drive)
         % note that curvature kappa = 1/R
-        if p.v0^2 >= p.R / (p.m(m) + p.m_spr / 3)
+        if p.v0^2 >= p.R / (p.m(m) + p.m_spr / 3) * p.k
             t_l(m) = 0;
         else
             t_l(m) = fzero(zero_func, opt_vec);
@@ -29,7 +29,7 @@ function results = find_movement_dl(p)
     %% calculate v_to: velocity when projectile loses contact with spring
     xl = calc_x_latched_t(p, t_l);
     vl = calc_v_latched_t(p, t_l);
-    v_to = sqrt(vl.^2 + 1 ./ (p.m + p.m_spr / 3) .* (1 - xl).^2);
+    v_to = sqrt(vl.^2 + p.k ./ (p.m + p.m_spr / 3) .* (1 - xl).^2);
 
     results.v_to = v_to;
 
@@ -78,7 +78,7 @@ function results = find_movement_dl(p)
 
     for i=1:num_mass
         m = p.m(i);
-        m_sqrt = sqrt(m + p.m_spr / 3);
+        m_sqrt = sqrt((m + p.m_spr / 3) / p.k);
 
         phi = atan(m_sqrt * vl(i) / (1 - xl(i))) - (t_l(i)) ./ m_sqrt;
         x_r(:, i) = 1 - (v_to(i) * m_sqrt * cos(p.t(i, :) / m_sqrt + phi));
