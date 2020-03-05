@@ -112,5 +112,10 @@ function plot_xva(p_d, results)
     xlabel('Position (m)');
     ylabel('Velocity (m/s)');
     disp('Displaying plot');
+    
+    hold on;
+    [q, num_mass] = size(p_d.m);
+    plot(results.x(num_mass * 0.6, :), results.v(num_mass * 0.6, :), 'g', 'LineWidth', 2);
+    plot(results.x(num_mass * 0.7, :), results.v(num_mass * 0.7, :), 'g', 'LineWidth', 2);
     toc
 end
