@@ -14,11 +14,9 @@ function results = find_movement_dl(p)
         opt_vec = ones(size(m)) * opt_start;
         zero_func = @(t) ((p.m(m) + p.m_spr/3) .* calc_a_latched_t(p, t) + calc_x_latched_t(p, t) - 1);
 
-        % if a root wasn't found, it'll default to t_l = 0
-        % TODO: why are indices 613-617 doing this?
-        % could do a vector and binary search for the t_l
-        % tmax = R/vl = latch is compeltely out of the way
-        % find(thing < 0, 1 first) where zerofunc goes <0
+        % checks if the latch is moving at greater than the philir velocity
+        % (philir.pdf in posm g-drive)
+        % note that curvature kappa = 1/R
         if p.v0^2 >= p.R / (p.m(m) + p.m_spr / 3)
             t_l(m) = 0;
         else
@@ -26,7 +24,6 @@ function results = find_movement_dl(p)
         end
     end
     
-    t_l(isnan(t_l)) = 0;
     results.t_l = abs(t_l);
 
     %% calculate v_to: velocity when projectile loses contact with spring
@@ -147,7 +144,7 @@ function results = find_movement_dl(p)
     results.f = (repmat(p.m, [num_times 1]) .* (a_l + a_r))';
 end
 
-%% Calculations
+%% Calculations of latch movement
 function y = calc_y(p, t)
     y = min(p.v0 * t + 0.5 * p.F_l / p.m_l * (t.^2), p.R - eps);
 end
@@ -160,18 +157,9 @@ function y_ddot = calc_y_ddot(p, t)
     y_ddot = p.F_l / p.m_l;
 end
 
-function x = calc_x_latched(p, y)
-    x = p.R * (1 - sqrt(1 - (y.y / p.R).^2));
-end
-
-function v = calc_v_latched(p, y)
-    v = y.y .* y.y_dot ./ (p.R * sqrt(1 - (y.y / p.R).^2));
-end
-
-function a = calc_a_latched(p, y)
-    a = 1 ./ (p.R * sqrt(1 - (y.y / p.R).^2)) .* (y.y_dot.^2 + y.y .* y.y_ddot + y.y.^2 .* y.y_dot.^2 ./ (p.R^2 - y.y.^2));
-end
-
+%% Calculations of projectile movement while latched
+% the following assume that the y struct has not ben run;
+% it will calculate for a specific time
 function x = calc_x_latched_t(p, t)
     y = calc_y(p, t);
     x = p.R * (1 - sqrt(1 - (y / p.R).^2));
@@ -188,4 +176,19 @@ function a = calc_a_latched_t(p, t)
     y_dot = calc_y_dot(p, t);
     y_ddot = calc_y_ddot(p, t);
     a = 1 ./ (p.R * sqrt(1 - (y / p.R).^2)) .* (y_dot.^2 + y .* y_ddot + y.^2 .* y_dot.^2 ./ (p.R^2 - y.^2));
+end
+
+% the following assume that the y struct has been run for all times
+% this is a small optimization so that we aren't repeatedly running latch
+% movement
+function x = calc_x_latched(p, y)
+    x = p.R * (1 - sqrt(1 - (y.y / p.R).^2));
+end
+
+function v = calc_v_latched(p, y)
+    v = y.y .* y.y_dot ./ (p.R * sqrt(1 - (y.y / p.R).^2));
+end
+
+function a = calc_a_latched(p, y)
+    a = 1 ./ (p.R * sqrt(1 - (y.y / p.R).^2)) .* (y.y_dot.^2 + y.y .* y.y_ddot + y.y.^2 .* y.y_dot.^2 ./ (p.R^2 - y.y.^2));
 end
