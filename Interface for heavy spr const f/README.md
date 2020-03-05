@@ -21,3 +21,7 @@ Week following 20 Feb:
 
 Week following 27 Feb:
 - Fixed bug with fzero / imaginary values; Only runs fzero for finding t_l if we're less than philir velocity (philir.pdf)
+- Added mass lines
+- Began adding variable spring constant (as opposed to always using an ideal spring constant); got a velocity tradeoff instead of a position tradeoff
+
+Week following 5 Mar:
