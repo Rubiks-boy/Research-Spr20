@@ -116,20 +116,28 @@ Modifying the potential energy to include $\tilde{k}$,
     \frac{1}{2}\tilde{k}(1-\tilde{x})^2 + \frac{1}{2}\left(\tilde{m} + \frac{\tilde{m}_{\text{spr}}}{3} \right)\tilde{v}^2 - \int_0^{\tilde{x}} \! f_{\text{latch}}(x') \, \mathrm{d}x' = constant. 
 \]
 \[
-    \rightarrow \left(\tilde{m} + \frac{\tilde{m}_{\text{spr}}}{3} \right)\tilde{a}(\tilde{t_l}) = \tilde{k} \biggl( 1 - \tilde{x}(\tilde{t_l}) \biggr)
+    \rightarrow \left(\tilde{m} + \frac{\tilde{m}_{\text{spr}}}{3} \right)\tilde{a}(\tilde{t_l}) = \tilde{k} \biggl( \tilde{x}_{max} - \tilde{x}(\tilde{t_l}) \biggr)
+\]
+
+where 
+\[
+    \tilde{x}_{max} = \frac{x_{max}}{d} = \frac{F_{max} / k}{d} = \frac{1}{\tilde{k}}.
 \]
 \newline 
 \newline
 \noindent \textbf{Solving for velocity at takeoff $v_{\text{to}}$:}
 \newline
 \[
-    \tilde{v_{\text{to}}} = \sqrt{\tilde{v_l}^2 + \frac{\tilde{k}}{\tilde{m} + \frac{\tilde{m}_{\text{spr}}}{3}} (1 - \tilde{x_l})^2}
+    \tilde{v_{\text{to}}} = \sqrt{\tilde{v_l}^2 + \frac{\tilde{k}}{\tilde{m} + \frac{\tilde{m}_{\text{spr}}}{3}} (\tilde{x}_{max} - \tilde{x_l})^2}
 \]
 \newline 
 \newline
 \noindent \textbf{After latch release $t_l < t < t_{\text{to}}$:}
 \newline
-In equations 61-67 in supplemental, replace $\tilde{m} + \frac{\tilde{m}_{spr}}{3}$ terms with $(\tilde{m} + \frac{\tilde{m}_{spr}}{3}) / \tilde{k}$
+In equation 61, switch in maximum position $\tilde{x}_{max}$ and add spring constant $\tilde{k}$ to give
+\[
+    \tilde{x}(\tilde{t}) = \tilde{x}_{max} - \tilde{v}_{to} \sqrt{\frac{\tilde{m} + \frac{\tilde{m}_{spr}}{3}}{\tilde{k}}} \cos{\biggl(\sqrt{\frac{\tilde{k}}{\tilde{m} + \frac{\tilde{m}_{spr}}{3}}} \ \tilde{t} + \tilde{\phi} \biggr)} \]
+In equations 62-67 in supplemental, replace $\tilde{m} + \frac{\tilde{m}_{spr}}{3}$ terms with $(\tilde{m} + \frac{\tilde{m}_{spr}}{3}) / \tilde{k}$.
 \newline
 
 \end{document}
