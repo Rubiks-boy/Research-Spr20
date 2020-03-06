@@ -85,6 +85,7 @@ function plot_xva(p_d, results)
     toc;
     
     tic;
+    % TODO: try diff interpolation methods
     [X, V] = meshgrid(linspace(0, p_d.x_range, p_d.pic_width), linspace(0, p_d.v_range, p_d.pic_height));
     inter = griddata(x, v, f, X, V);
     disp('Done with interpolation');
