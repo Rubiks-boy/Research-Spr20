@@ -16,7 +16,7 @@ p_d.R = 0.0002;                     % Radius of the latch
 p_d.num_times = 100;                % How many times to run on
 p_d.t_perc_above = 1;               % How far above t_to + t_l to find values for motion
 
-p_d.E = 0.5 * p_d.F_max / p_d.d;    % Young's modulus of the spring
+p_d.E = 1.5 * p_d.F_max / p_d.d;    % Young's modulus of the spring
 p_d.A = 1;                          % Cross sectional area of the spring
 p_d.L = 1;                          % Rest length of the spring
 

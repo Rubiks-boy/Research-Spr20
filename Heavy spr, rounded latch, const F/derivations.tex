@@ -95,7 +95,7 @@ Equations 61-67 in supplemental.
 \end{center}
 
 \noindent
-Before, all derivations assumed an ideal $k$ value for the spring; i.e. $k_{ideal} = F_{max} / d$. Now, we will mdoify these derivations for a non-ideal spring stiffness. \newline
+Before, all derivations assumed an ideal $k$ value for the spring; i.e. $k_{optimal} = F_{max} / d$. Now, we will mdoify these derivations for a non-ideal spring stiffness. \newline
 
 \noindent \textbf{New Parameters:}
 \newline
@@ -106,14 +106,14 @@ $k = \frac{EA}{L}$ \newline
 
 \noindent \textbf{Dimensionless values:} 
 \newline
-$\tilde{k} = \frac{k}{k_{ideal}} = \frac{kd}{F_{max}}$
+$\tilde{k} = \frac{k}{k_{optimal}} = \frac{kd}{F_{max}}$
 \newline
 \newline
 \noindent \textbf{Solving for time of latch release $t_l$}
 \newline
 Modifying the potential energy to include $\tilde{k}$,
 \[
-    \frac{1}{2}\tilde{k}(1-\tilde{x})^2 + \frac{1}{2}\left(\tilde{m} + \frac{\tilde{m}_{\text{spr}}}{3} \right)\tilde{v}^2 - \int_0^{\tilde{x}} \! f_{\text{latch}}(x') \, \mathrm{d}x' = constant. 
+    \frac{1}{2}\tilde{k}(\tilde{x}_{max}-\tilde{x})^2 + \frac{1}{2}\left(\tilde{m} + \frac{\tilde{m}_{\text{spr}}}{3} \right)\tilde{v}^2 - \int_0^{\tilde{x}} \! f_{\text{latch}}(x') \, \mathrm{d}x' = constant. 
 \]
 \[
     \rightarrow \left(\tilde{m} + \frac{\tilde{m}_{\text{spr}}}{3} \right)\tilde{a}(\tilde{t_l}) = \tilde{k} \biggl( \tilde{x}_{max} - \tilde{x}(\tilde{t_l}) \biggr)
@@ -123,6 +123,7 @@ where
 \[
     \tilde{x}_{max} = \frac{x_{max}}{d} = \frac{F_{max} / k}{d} = \frac{1}{\tilde{k}}.
 \]
+and $\tilde{x}_{max}$ can never exceed $1$, since the spring can never be contracted past the motor's max range $d$.
 \newline 
 \newline
 \noindent \textbf{Solving for velocity at takeoff $v_{\text{to}}$:}
@@ -137,7 +138,7 @@ where
 In equation 61, switch in maximum position $\tilde{x}_{max}$ and add spring constant $\tilde{k}$ to give
 \[
     \tilde{x}(\tilde{t}) = \tilde{x}_{max} - \tilde{v}_{to} \sqrt{\frac{\tilde{m} + \frac{\tilde{m}_{spr}}{3}}{\tilde{k}}} \cos{\biggl(\sqrt{\frac{\tilde{k}}{\tilde{m} + \frac{\tilde{m}_{spr}}{3}}} \ \tilde{t} + \tilde{\phi} \biggr)} \]
-In equations 62-67 in supplemental, replace $\tilde{m} + \frac{\tilde{m}_{spr}}{3}$ terms with $(\tilde{m} + \frac{\tilde{m}_{spr}}{3}) / \tilde{k}$.
+In equations 62-67 in supplemental, replace $\tilde{m} + \frac{\tilde{m}_{spr}}{3}$ terms with $(\tilde{m} + \frac{\tilde{m}_{spr}}{3}) / \tilde{k}$. In $\tilde{\phi}$, replace $1 - \tilde{x}_l$ with $\tilde{x}_{max} - \tilde{x}_l$.
 \newline
 
 \end{document}

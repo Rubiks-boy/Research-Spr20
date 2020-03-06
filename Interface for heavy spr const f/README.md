@@ -25,3 +25,4 @@ Week following 27 Feb:
 - Began adding variable spring constant (as opposed to always using an ideal spring constant); got a velocity tradeoff instead of a position tradeoff
 
 Week following 5 Mar:
+- Correct max x range for a stiff spring to no longer be the full range 'd'. Updated derivations accordingly.
