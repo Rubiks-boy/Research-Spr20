@@ -101,10 +101,11 @@ function plot_xva(p_d, results)
     
     % use the lowest mass as a line for the upper-left corner of the graph
     % (any points left & up from this line should be removed)
-    first_mass_x = results.x(1, :);
-    [q, max_t] = size(first_mass_x);
-    for k=1:max_t
-        inter(V > results.v(1, k) & X < results.x(1, k)) = 0;
+    first_mass_X = linspace(0, 1, p_d.pic_width);
+    first_mass_V = interp1(results.x(1, :), results.v(1, :), first_mass_X);
+    
+    for k=1:p_d.pic_width
+        inter(V > first_mass_V(k) & X < first_mass_X(k)) = 0;
     end
     
     disp('Zeroed data outside logical range');
