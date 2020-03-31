@@ -2,18 +2,18 @@ clearvars;
 close all;
 
 tic;
+disp('Loading params from file');
 p_d = load('params');
-disp('Loaded params from file');
 toc;
 
 tic;
+disp('Non-dimensionalizing parameters');
 p_dl = convert_to_dl(p_d);
-disp('non-dimensionalized parameters');
 toc;
 
 tic
+disp('Running calculations for motion of projectile');
 results = find_movement_dl(p_dl);
-disp('Ran calculations for motion of projectile');
 toc
 
 % tic
@@ -22,6 +22,7 @@ toc
 % toc
 
 plot_xva(p_d, results);
+plot_EAK(p_d, results);
 
 function p_dl = convert_to_dl(p_d)
     p_dl = struct;
@@ -59,7 +60,11 @@ end
 
 function plot_xva(p_d, results)
     tic;
+    disp('Preparing data for interpolation');
+    
     figure(1);
+    
+    % Put all the data in a 1D array
     x = results.x;
     v = results.v;
     f = results.f;
@@ -68,32 +73,34 @@ function plot_xva(p_d, results)
     v = v(:);
     f = f(:);
     
+    % Tricks interpolating into allowing duplicate data points
     x = x + (0:size(x)-1)'*1E-14;
     v = v + (0:size(v)-1)'*1E-14;
 
+    % Sorts data based on x axis
     [x, i] = sort(x);
     v = v(i);
     f = f(i);
     
+    % Removes any data points too far to the right
     x = x(x <= p_d.x_range / p_d.d);
     v = v(1:size(x));
     f = f(1:size(x));
     
     v(find(v == Inf)) = 0;
-    
-    disp('Prepared data for interpolation');
     toc;
     
     tic;
+    disp('Doing interpolation');
     % Performs the interpolation on the dimensionless data
     % For whatever reason, the dimensionless data leads to much smoother
     % graphs. We'll add dimensions back in after the interpolation
     [X, V] = meshgrid(linspace(0, p_d.x_range / p_d.d, p_d.pic_width), linspace(0, p_d.v_range / p_d.v_max, p_d.pic_height));
     inter = griddata(x, v, f, X, V);
-    disp('Done with interpolation');
     toc
     
     tic
+    disp('Zeroing data outside logical range');
     % remove any indices too far right on the x axis to be in range
     num_in_range = floor(p_d.d / p_d.x_range * p_d.pic_width);
     in_range = [true(num_in_range, p_d.pic_height); false(p_d.pic_width - num_in_range, p_d.pic_height)]';
@@ -107,25 +114,24 @@ function plot_xva(p_d, results)
     for k=1:p_d.pic_width
         inter(V > first_mass_V(k) & X < first_mass_X(k)) = 0;
     end
-    
-    disp('Zeroed data outside logical range');
     toc
 
     tic
+    disp('Adding dimensions back to interpolation');
     X = X * p_d.d;
     V = V * p_d.v_max;
     inter = inter * p_d.F_max;
-    disp('Added dimensions to interpolation');
     toc
     
     tic
+    disp('Displaying plot');
+    
     imagesc([min(X(1, :)), max(X(1, :))], [min(V(:, 1)), max(V(:, 1))], inter);
     set(gca,'YDir','normal');
     colorbar;
     title('Force on projectile');
     xlabel('Position (m)');
     ylabel('Velocity (m/s)');
-    disp('Displaying plot');
     hold on;
 
     % Add lines for particular masses
