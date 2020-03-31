@@ -92,18 +92,21 @@ function plot_xva(p_d, results)
     inter = griddata(x, v, f, X, V);
     disp('Done with interpolation');
     toc
-    tic
     
+    tic
+    % remove any indices too far right on the x axis to be in range
     num_in_range = floor(p_d.d / p_d.x_range * p_d.pic_width);
     in_range = [true(num_in_range, p_d.pic_height); false(p_d.pic_width - num_in_range, p_d.pic_height)]';
     inter = inter .* in_range;
     
+    % use the lowest mass as a line for the upper-left corner of the graph
+    % (any points left & up from this line should be removed)
     first_mass_x = results.x(1, :);
-    [q, max_t] = size(first_mass_x(first_mass_x <= p_d.x_range / p_d.d));
-
+    [q, max_t] = size(first_mass_x);
     for k=1:max_t
         inter(V > results.v(1, k) & X < results.x(1, k)) = 0;
     end
+    
     disp('Zeroed data outside logical range');
     toc
 

@@ -13,7 +13,7 @@ p_d.m_spr = 0.0001;                 % Mass of the spring
 p_d.v0 = 0.25;                      % Initial velocity of the latch
 p_d.R = 0.002;                      % Radius of the latch
 
-p_d.num_times = 1000;               % How many times to run on
+p_d.num_times = 500;               % How many times to run on
 p_d.t_perc_above = 1;               % How far above t_to + t_l to find values for motion
 
 p_d.E = 1 * p_d.F_max / p_d.d;      % Young's modulus of the spring
