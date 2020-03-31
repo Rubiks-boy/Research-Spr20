@@ -13,11 +13,12 @@ p_d.m_spr = 0.0001;                 % Mass of the spring
 p_d.v0 = 5;                         % Initial velocity of the latch
 p_d.R = 0.0002;                     % Radius of the latch
 
+p_d.num_times = 100;                % How many times to run on
 p_d.t_perc_above = 1;               % How far above t_to + t_l to find values for motion
 
-p_d.E = logspace(4, 5, 250);        % Young's modulus of the spring
+p_d.E = logspace(4, 8, 250);        % Young's modulus of the spring
 p_d.A = logspace(-6, -3, 250);      % Cross sectional area of the spring
-p_d.L = 1;                          % Rest length of the spring
+p_d.L = 0.01;                       % Rest length of the spring
 
 p_d.pic_width = 500;                % Width of outputted xva graph (number of data points)
 p_d.pic_height = 500;               % Width of outputted xva graph (number of data points)
