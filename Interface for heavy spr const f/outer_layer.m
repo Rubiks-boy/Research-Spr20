@@ -126,11 +126,11 @@ function plot_xva(p_d, results)
     xlabel('Position (m)');
     ylabel('Velocity (m/s)');
     disp('Displaying plot');
-    
     hold on;
-    [q, num_mass] = size(p_d.m);
-    % TODO: choose these in the set of parameters
-    plot(results.x(num_mass * 0.6, :) * p_d.d, results.v(num_mass * 0.6, :) * p_d.v_max, 'g', 'LineWidth', 2);
-    plot(results.x(num_mass * 0.7, :) * p_d.d, results.v(num_mass * 0.7, :) * p_d.v_max, 'g', 'LineWidth', 2);
+
+    % Add lines for particular masses
+    for i=1:size(p_d.mass_lines')
+        plot(results.x(p_d.mass_lines(i), :) * p_d.d, results.v(p_d.mass_lines(i), :) * p_d.v_max, 'g', 'LineWidth', 2);
+    end
     toc
 end

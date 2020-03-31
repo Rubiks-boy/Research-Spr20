@@ -25,4 +25,6 @@ p_d.pic_height = 1000;              % Width of outputted xva graph (number of da
 p_d.x_range = 0.006;                % Max position for x axis of xva graph
 p_d.v_range = 25;                   % Max velocity for y axis of xva graph
 
+p_d.mass_lines = [75, 150, 500];   % Creates lines along certain masses corresponding to indices given
+
 save('params', '-struct', 'p_d');
