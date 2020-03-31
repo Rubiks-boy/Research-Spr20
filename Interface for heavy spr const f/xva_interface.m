@@ -22,7 +22,6 @@ toc
 % toc
 
 plot_xva(p_d, results);
-plot_EAK(p_d, results);
 
 function p_dl = convert_to_dl(p_d)
     p_dl = struct;
