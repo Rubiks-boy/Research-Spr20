@@ -23,7 +23,7 @@ results = find_movement_dl(p_dl);
 
 results_d = convert_to_d(p_d, results);
 
-plot_xva(results);
+plot_xva(results_d);
 
 function p_dl = convert_to_dl(p_d)
     p_dl = struct;
@@ -79,7 +79,7 @@ function plot_xva(results)
         end
     end
     
-    [X, V] = meshgrid(linspace(0, 1.5, 500), linspace(0, 10, 1000));
+    [X, V] = meshgrid(linspace(0, 1.5*0.005, 500), linspace(0, 10*5, 1000));
     inter = griddata(x, v, f, X, V);
     imagesc([min(X(1, :)), max(X(1, :))], [min(V(:, 1)), max(V(:, 1))], inter);
     set(gca,'YDir','normal');
