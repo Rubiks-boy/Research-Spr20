@@ -16,12 +16,12 @@ results = find_movement_dl(p_dl);
 disp('Ran calculations for motion of projectile');
 toc
 
-tic
-results_d = convert_to_d(p_d, results);
-disp('Re-dimensionalized results');
-toc
+% tic
+% results_d = convert_to_d(p_d, results);
+% disp('Re-dimensionalized results');
+% toc
 
-plot_xva(p_d, results_d);
+plot_xva(p_d, results);
 
 function p_dl = convert_to_dl(p_d)
     p_dl = struct;
@@ -75,7 +75,7 @@ function plot_xva(p_d, results)
     v = v(i);
     f = f(i);
     
-    x = x(x <= p_d.x_range);
+    x = x(x <= p_d.x_range / p_d.d);
     v = v(1:size(x));
     f = f(1:size(x));
     
@@ -85,8 +85,10 @@ function plot_xva(p_d, results)
     toc;
     
     tic;
-    % TODO: try diff interpolation methods
-    [X, V] = meshgrid(linspace(0, p_d.x_range, p_d.pic_width), linspace(0, p_d.v_range, p_d.pic_height));
+    % Performs the interpolation on the dimensionless data
+    % For whatever reason, the dimensionless data leads to much smoother
+    % graphs. We'll add dimensions back in after the interpolation
+    [X, V] = meshgrid(linspace(0, p_d.x_range / p_d.d, p_d.pic_width), linspace(0, p_d.v_range / p_d.v_max, p_d.pic_height));
     inter = griddata(x, v, f, X, V);
     disp('Done with interpolation');
     toc
@@ -97,7 +99,7 @@ function plot_xva(p_d, results)
     inter = inter .* in_range;
     
     first_mass_x = results.x(1, :);
-    [q, max_t] = size(first_mass_x(first_mass_x <= p_d.x_range));
+    [q, max_t] = size(first_mass_x(first_mass_x <= p_d.x_range / p_d.d));
 
     for k=1:max_t
         inter(V > results.v(1, k) & X < results.x(1, k)) = 0;
@@ -105,6 +107,13 @@ function plot_xva(p_d, results)
     disp('Zeroed data outside logical range');
     toc
 
+    tic
+    X = X * p_d.d;
+    V = V * p_d.v_max;
+    inter = inter * p_d.F_max;
+    disp('Added dimensions to interpolation');
+    toc
+    
     tic
     imagesc([min(X(1, :)), max(X(1, :))], [min(V(:, 1)), max(V(:, 1))], inter);
     set(gca,'YDir','normal');
@@ -117,7 +126,7 @@ function plot_xva(p_d, results)
     hold on;
     [q, num_mass] = size(p_d.m);
     % TODO: choose these in the set of parameters
-    plot(results.x(num_mass * 0.6, :), results.v(num_mass * 0.6, :), 'g', 'LineWidth', 2);
-    plot(results.x(num_mass * 0.7, :), results.v(num_mass * 0.7, :), 'g', 'LineWidth', 2);
+    plot(results.x(num_mass * 0.6, :) * p_d.d, results.v(num_mass * 0.6, :) * p_d.v_max, 'g', 'LineWidth', 2);
+    plot(results.x(num_mass * 0.7, :) * p_d.d, results.v(num_mass * 0.7, :) * p_d.v_max, 'g', 'LineWidth', 2);
     toc
 end
