@@ -14,6 +14,7 @@ toc;
 tic
 disp('Running calculations for motion of projectile');
 max_vel_dl = ones(size(p_d.E, 2), size(p_d.A, 2));
+% TODO: calculate max_vel literally any other way
 for i=1:size(p_d.E, 2)
     if mod(i, 5) == 0
         fprintf('.');
