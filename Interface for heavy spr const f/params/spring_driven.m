@@ -6,7 +6,7 @@ p_d.F_max = 20;                     % Max force the motor can provide
 p_d.v_max = 5;                      % Fastest motor velocity
 p_d.d = 0.005;                      % Range of motion of motor
 
-p_d.m = logspace(-10, 1, 1000);      % Mass range of projectiles to simulate
+p_d.m = logspace(-5, 1, 1000);      % Mass range of projectiles to simulate
 p_d.F_l = eps;                      % Force latch is pulled with
 p_d.m_l = 9999999;                  % Mass of the latch
 p_d.m_spr = 0.0001;                 % Mass of the spring
