@@ -27,4 +27,4 @@ p_d.v_range = 30;                   % Max velocity for y axis of xva graph
 
 p_d.mass_lines = [90, 100, 150];     % Creates lines along certain masses corresponding to indices given
 
-save('params', '-struct', 'p_d');
+save('params_xva', '-struct', 'p_d');

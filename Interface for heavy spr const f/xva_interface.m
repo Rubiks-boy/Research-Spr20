@@ -3,7 +3,7 @@ close all;
 
 tic;
 disp('Loading params from file');
-p_d = load('params');
+p_d = load('params_xva');
 toc;
 
 tic;
