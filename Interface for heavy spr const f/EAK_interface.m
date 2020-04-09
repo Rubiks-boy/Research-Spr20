@@ -14,15 +14,17 @@ toc;
 tic
 disp('Running calculations for motion of projectile');
 max_vel_dl = ones(size(p_d.E, 2), size(p_d.A, 2));
-% TODO: calculate max_vel literally any other way
-for i=1:size(p_d.E, 2)
+
+for i=1:size(p_dl.E, 2)
     if mod(i, 5) == 0
         fprintf('.');
     end
     
-    for j=1:size(p_d.A, 2)
+    for j=1:size(p_dl.A, 2)
         p_dl_curr = p_dl;
         p_dl_curr.k = p_dl.k(i, j);
+        p_dl_curr.A = p_dl.A(i);
+        p_dl_curr.m_spr = p_dl.m_spr(i);
         max_vel_dl(i, j) = find_movement_dl(p_dl_curr).v(end);
     end
 end
@@ -46,12 +48,17 @@ function p_dl = convert_to_dl(p_d)
     p_dl.v_max = p_d.v_max;
     p_dl.d = p_d.d; 
     
-    [E, A] = meshgrid(p_d.E, p_d.A);
-    p_dl.k = (E .* A / p_d.L) * p_d.d / p_d.F_max;
+    p_dl.L = p_d.L / p_d.d;
+    p_dl.A = p_d.A / p_d.d^2;
+    p_dl.E = p_d.E * p_d.d^2 / p_d.F_max;
+    [E, A] = meshgrid(p_dl.E, p_dl.A);
+    p_dl.k = (E .* A / p_dl.L);
     
     p_dl.F_l = p_d.F_l / p_d.F_max;
     p_dl.m_l = p_d.m_l * p_d.v_max^2 / (p_d.F_max * p_d.d);
-    p_dl.m_spr = p_d.m_spr * p_d.v_max^2 / (p_d.F_max * p_d.d);
+    p_dl.rho_spr = p_d.rho_spr * p_d.v_max^2 * p_d.d^2 / p_d.F_max;
+    p_dl.m_spr = p_dl.rho_spr * p_dl.L * p_dl.A;
+    p_dl.sigma_spr = p_d.sigma_spr * p_d.d^2 / p_d.F_max;
     p_dl.m = p_d.m * p_d.v_max^2 / (p_d.F_max * p_d.d);
     p_dl.v0 = p_d.v0 / p_d.v_max;
     p_dl.R = p_d.R / p_d.d;

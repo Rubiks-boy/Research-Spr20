@@ -12,7 +12,7 @@ function results = find_movement_dl(p)
     for m=1:num_mass
         opt_start = -eps;
         opt_vec = ones(size(m)) * opt_start;
-        x_max = min(1, 1/p.k);
+        x_max = min(1, min(1/p.k, p.sigma_spr * p.A / p.k));
         zero_func = @(t) ((p.m(m) + p.m_spr/3) .* calc_a_latched_t(p, t) + p.k * (calc_x_latched_t(p, t) - x_max));
 
         % checks if the latch is moving at greater than the philir velocity
@@ -30,7 +30,7 @@ function results = find_movement_dl(p)
     %% calculate v_to: velocity when projectile loses contact with spring
     xl = calc_x_latched_t(p, t_l);
     vl = calc_v_latched_t(p, t_l);
-    x_max = min(1, 1/p.k);
+    x_max = min(1, min(1/p.k, p.sigma_spr * p.A / p.k));
     v_to = sqrt(vl.^2 + p.k ./ (p.m + p.m_spr / 3) .* (x_max - xl).^2);
 
     results.v_to = v_to;
@@ -77,8 +77,6 @@ function results = find_movement_dl(p)
     x_r = (ones(1, num_times))' * (1 * ones(1, num_mass));
     v_r = x_r;
     a_r = x_r;
-    
-    x_max = min(1, 1/p.k);
 
     for i=1:num_mass
         m = p.m(i);

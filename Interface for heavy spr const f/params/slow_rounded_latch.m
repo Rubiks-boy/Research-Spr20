@@ -9,7 +9,8 @@ p_d.d = 0.005;                      % Range of motion of motor
 p_d.m = logspace(-5, 3, 1000);      % Mass range of projectiles to simulate
 p_d.F_l = eps;                      % Force latch is pulled with
 p_d.m_l = 9999999;                  % Mass of the latch
-p_d.m_spr = 0.0001;                 % Mass of the spring
+p_d.rho_spr = 0.0001;               % Mass density of the spring (per unit volume)
+p_d.sigma_spr = 1E6;                % Max stress on spring (Force per area)
 p_d.v0 = 0.25;                      % Initial velocity of the latch
 p_d.R = 0.002;                      % Radius of the latch
 
