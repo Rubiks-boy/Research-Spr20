@@ -1,0 +1,128 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\usepackage{enumerate}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{etoolbox}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage{tikzsymbols}
+\usepackage{hyperref}
+
+\begin{document}
+\begin{center}
+    Friction between latch and projectile \\
+    9 Apr 2020
+\end{center}
+
+
+\noindent This file only includes the derivations for while the projectile is in contact with the latch.
+\newline
+\noindent \textbf{Using $\Sigma F = ma$}
+\newline
+Latch moves in x direction, projectile in y direction.
+\newline
+For the latch,
+\[ \tag{1}
+    \hat{x}: F_l + N \sin{\theta} - \mu_k N \cos{\theta} = m_l a_l
+\]
+Solving for N
+\[\tag{2}
+    N = \frac{m_l a_l - F_l}{\sin{\theta} - \mu_k \cos{theta}}
+\]
+\newline
+For the projectile,
+\[\tag{3}
+    \hat{y}: F_{spr} + \mu_k N \cos{\theta} - N \cos{\theta} = m a
+\]
+Solving for N
+\[\tag{4}
+    N = \frac{F_{spr} - ma}{\cos{\theta} + \mu_k \sin{\theta}}
+\]
+\newline
+\noindent \textbf{Putting accelerations $a$, $a_l$ in terms of $\theta$}
+\newline
+\begin{align}
+    x & = r \sin{\theta} \tag{5} \\
+    a_l & = r \cos{\theta} \  \ddot{\theta} - r \sin{\theta} \  \dot{\theta} \tag{6} \\
+    y & = r (1 - \cos{\theta}) \tag{7} \\
+    a & = r \sin{\theta} \  \ddot{\theta} - r \cos{\theta} \  \dot{\theta} \tag{8}
+\end{align}
+\newline
+\noindent \textbf{Eliminating normal force N}
+\newline
+Plugging equations (6), (8) into (2), (4) (respectively), we find
+\begin{align}
+    N = \frac{m_l (r \cos{\theta} \  \ddot{\theta} - r \sin{\theta} \  \dot{\theta}) - F_l}{\sin{\theta} - \mu_k \cos{\theta}} \tag{9} \\
+    N = \frac{F_{spr} - m (r \sin{\theta} \  \ddot{\theta} - r \cos{\theta} \  \dot{\theta})}{\cos{\theta} + \mu_k \sin{\theta}} \tag{10} \\
+\end{align}
+\newline
+Setting (9) and (10) equal to each other,
+\begin{align}
+    (\cos{\theta} & + \mu_k \sin{\theta}) \bigl( m_l (r \cos{\theta} \  \ddot{\theta} - r \sin{\theta} \  \dot{\theta}) - F_l \bigr) \notag \\
+    & = (\sin{\theta} - \mu_k \cos{\theta}) \bigl(F_{spr} - m (r \sin{\theta} \  \ddot{\theta} - r \cos{\theta} \  \dot{\theta}) \bigr) \tag{11}
+\end{align}
+\newline
+Dividing by $\cos{\theta}$, we can place this into the form $A + B \dot{\theta} + C \ddot{\theta}$
+\begin{align}
+    (\tan{\theta} & - \mu_k) F_{spr} + F_l(1+\mu_k \tan{\theta}) \notag \\
+    & + [\mu_k mr \cos{\theta} - mr \sin{\theta} + m_l r \sin{\theta} + \mu_k m_l r \sin{\theta} \tan{\theta}]\ \dot{\theta} \notag \\
+    & + [\mu_k mr \sin{\theta} - mr \sin{\theta} \tan{\theta} - m_l r \cos{\theta} - \mu_k m_l r \sin{\theta}]\ \ddot{\theta} = 0 \tag{12}
+\end{align}
+\newline
+\noindent \textbf{Substitutions to put eqn (12) in terms of $y$}
+\newline
+Using a rounded latch,
+\[\tag{13}
+    y = r - \sqrt{r^2 - x_l^2}
+\]
+\[\tag{14}
+    y' = \frac{dy}{dx_l} = \frac{x_l}{\sqrt{r^2 - x_l^2}}
+\]
+Since $x_l = r \sin{\theta}$,
+\[
+    y' = \frac{r \sin{\theta}}{\sqrt{r^2 (1 - \sin^2{\theta})}} = \frac{r \sin{\theta}}{r \cos{\theta}}
+\]
+\[\tag{15}
+    y' = \tan{\theta}
+\]
+which matches our expectation that $\frac{dy}{dx_l} = \tan{\theta}$.
+\newline
+\begin{align}
+    y'' & = \frac{d}{dx_l} \biggl( x_l (r^2 - x_l^2)^{-1/2} \biggr) \notag \\
+    & = (r^2 - x_l^2)^{-1/2} + x_l \biggl( \frac{-1}{2} (r^2 - x_l^2)^{-3/2} (-2 x_l) \biggr) \notag  \\
+    & = \frac{1}{r \sqrt{1 - \sin^2{\theta}}} + \frac{x_l^2}{(r^2 - x_l^2)^{3/2}} \notag \\
+    & = \frac{1}{r \cos{\theta}} + \frac{1}{r} \ \frac{r^2 \sin^2{\theta}}{r^2 (1- \sin^2{\theta})^{3/2}} \notag \\
+    & = \frac{1}{r \cos{\theta}} + \frac{1}{r} \ \frac{\sin^2{\theta}}{\cos^3{\theta}} \notag \\
+    & = \frac{1}{r \cos{\theta}} (1 + \tan^2{\theta}) \notag \\
+    y'' & = \frac{1}{r} \sec^3{\theta} \tag{16}
+\end{align}
+\newline
+Since $y = r - r \cos{\theta}$, $\frac{dy}{d\theta} = r \sin{\theta}$ and 
+\begin{align}
+    \dot{y} = \frac{dy}{dt} = \frac{dy}{d\theta} \frac{d\theta}{dt} = r \sin{\theta} \ \dot{\theta} \tag{17}
+\end{align}
+\newline
+Similarly,
+\begin{align}
+    \ddot{y} & = \frac{d}{dt}\biggl( r \sin{\theta} \frac{d\theta}{dt}\biggr) \notag \\
+    \ddot{y} & = r \cos{\theta} \ \dot{\theta}^2 + r \sin{\theta} \ \ddot{\theta} \tag{18}
+\end{align}
+\newline
+\noindent \textbf{Compare to diff. eqn. w/r/t $y$}
+\newline
+Prof. Ilton's derivation:
+\begin{align}
+    \biggl[ F_{spr} & (\mu_k - y_l') - F_l(\mu_k y_l' + 1) \biggr] - \biggl[ m_l (1 + \mu_k y_l') \frac{y_l''}{y_l'^3} \biggr] \dot{y} \notag \\
+    & + \biggl[ m (y_l' - \mu_k) + \frac{m_l}{y_l''} (1 + \mu_k y_l') \biggr] \ddot{y} \notag \\
+    & = A + B \dot{\theta} + C \ddot{\theta} = 0 \tag{19}
+\end{align}
+\newline
+Starting with the A component of eqn (19) and making the substitutions from above,
+\begin{align*}
+    F_{spr} & (\mu_k - y_l') - F_l(\mu_k y_l' + 1) \\
+    & = F_{spr} (\mu_k - \tan{\theta}) - F_l(\mu_k \tan{\theta} + 1)
+\end{align*}
+which matches the A component of eqn (12), off by a factor of $-1$.
+\end{document}

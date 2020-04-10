@@ -26,3 +26,12 @@ Week following 27 Feb:
 
 Week following 5 Mar:
 - Correct max x range for a stiff spring to no longer be the full range 'd'. Updated derivations accordingly.
+
+Week following 26 Mar:
+- Fixed issue where graphs for F vs. X and V were not smooth (weird horizontal lines)
+- Made (inefficient) preliminary max KE vs. A and E graph, using max Vel given by same find_movement_dl function
+
+Week following 2 Apr:
+- Added spring material failure sigma_spr
+- Added spring material density, as opposed to a set mass (m_spr = rho_spr * A * L)
+- Began working on derivations for when there's friction between the latch & projectile (not in this repo)
