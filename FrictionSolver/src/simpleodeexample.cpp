@@ -25,12 +25,6 @@ void SimpleOdeExample::runExample() {
 
     double x = 0.0;
 
-    // void (SimpleOdeExample::*rhs)(const double, double&, const double);
-    // rhs = &SimpleOdeExample::rhs;
-
-    // void (SimpleOdeExample::*write_cout)(const double&, const double);
-    // write_cout = &SimpleOdeExample::write_cout;
-
     integrate_adaptive( make_controlled( 1E-12 , 1E-12 , stepper_type() ) ,
                         SimpleOdeExample::rhs , x , 1.0 , 10.0 , 0.1 , SimpleOdeExample::write_cout );
 }
