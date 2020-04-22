@@ -1,13 +1,14 @@
-#include <iostream>
 #include "simpleodeexample.hpp"
+#include "secondorderode.hpp"
 
 using namespace std;
 
 int main()
 {
-    SimpleOdeExample soe;
+    // SimpleOdeExample ode;
+	SecondOrderOdeExample ode;
 
-	soe.runExample();
+	ode.runExample();
 
 	return 0;
 }

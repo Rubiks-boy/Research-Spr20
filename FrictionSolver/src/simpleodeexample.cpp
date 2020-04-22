@@ -1,6 +1,3 @@
-#include <iostream>
-#include <boost/numeric/odeint.hpp>
-
 #include "simpleodeexample.hpp"
 
 using namespace std;
