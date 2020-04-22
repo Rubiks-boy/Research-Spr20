@@ -6,7 +6,7 @@ using namespace boost::numeric::odeint;
 void FrictionOde::rhs( const state_type x , state_type &dxdt , const double t ) {
     // TOOD: Do something better with these constants, like read from a file or something
     const double mu = 0.2;
-    const double fSpr = 1, fL = 0.1;
+    const double fSpr = 1, fL = 1;
     const double m = 1, mL = 0.1;
     const double r = 1;
 
