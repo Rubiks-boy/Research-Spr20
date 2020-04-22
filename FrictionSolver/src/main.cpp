@@ -1,5 +1,13 @@
 #include <iostream>
+#include "simpleodeexample.hpp"
 
-int main(int argc, char *argv[]) {
-	std::cout << "Hello world!" << std::endl;
+using namespace std;
+
+int main()
+{
+    SimpleOdeExample soe;
+
+	soe.runExample();
+
+	return 0;
 }
