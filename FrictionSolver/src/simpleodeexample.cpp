@@ -14,7 +14,15 @@ void SimpleOdeExample::write_cout( const double &x , const double t ) {
     cout << t << '\t' << x << endl;
 }
 
+void SimpleOdeExample::write_curr_time() {
+    time_t now = time(0);
+    tm *gmtm = gmtime(&now);
+    cout << "UTC " << asctime(gmtm);
+}
+
 void SimpleOdeExample::runExample() {
+    write_curr_time();
+
     double x = 0.0;
 
     // void (SimpleOdeExample::*rhs)(const double, double&, const double);

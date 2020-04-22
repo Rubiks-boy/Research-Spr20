@@ -2,6 +2,8 @@
 #define SIMPLEODEEXAMPLE_HPP_INCLUDED 1
 
 #include <iostream>
+#include <chrono>
+#include <ctime>
 #include <boost/numeric/odeint.hpp>
 
 using namespace boost::numeric::odeint;
@@ -20,6 +22,7 @@ class SimpleOdeExample {
 
     static void rhs( const double x , double &dxdt , const double t );
     static void write_cout( const double &x , const double t );
+    static void write_curr_time();
 };
 
 #endif // SIMPLEODEEXAMPLE_HPP_INCLUDED
