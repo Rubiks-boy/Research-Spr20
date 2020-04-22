@@ -12,4 +12,8 @@ data_size = [3 Inf];
 
 A = fscanf(file, format, data_size)';
 plot(A(:, 1), A(:, 2))
+
+hold on;
+plot(A(:, 1), A(:, 3))
+
 fclose(file);

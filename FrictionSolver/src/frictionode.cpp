@@ -36,7 +36,7 @@ void FrictionOde::runExample() {
     write_curr_time();
 
     state_type x(2);
-    x[0] = 1;
+    x[0] = 0;
     x[1] = 0;
 
     integrate_const( make_controlled( 1E-12 , 1E-12 , stepper_type() ) ,
