@@ -7,4 +7,6 @@
 *.log
 *.out
 *.synctex.gz
-
+main
+*/.vscode/*
+*.o
