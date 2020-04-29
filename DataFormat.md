@@ -145,7 +145,13 @@ File name: ```SprLatchKE--MasslessLatch01--2020-04-23--02-26-36.csv```
 File contents:
 ```
 t,x,v,KE
-0 0 0 0
-1 500 0.1 2
-2 750 0.25 1
+0,0,0,0
+1,500,0.1,2
+2,750,0.25,1
 ```
+
+## Justification:
+### Why two output files? Why json?
+```.json``` files allow for tons of flexibility in how they're formatted, supporting some degree of flexibility with how the metadata is formatted (allowing for, say, the flexible ```"Project"``` key in the output. They are also super easy to deal with in most programming languages (ex. in Python, reading a ```.json``` file literally takes a single line of code, and can then be accessed like any other dictionary).
+
+However, storing all data in the ```json``` file causes problems for large data sets. Most interpreters that read json try to read the _whole_ file right from the start and store it all in memory, which could be disasterous if there's 10 million lines of data. Therefore, a separate ```csv``` file can fix this issue: ```csv``` files are great for tabular data, and for a large data set, can easily be read one line at a time.
