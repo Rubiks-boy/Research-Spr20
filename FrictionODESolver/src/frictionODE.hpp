@@ -18,8 +18,8 @@ class FrictionODE {
     typedef runge_kutta_dopri5< state_type > stepper_type;
 
     static void rhs( const state_type x , state_type &dxdt , const double t );
-    static void write_cout( const state_type &x , const double t );
-    static void write_curr_time();
+    static void writeData( const state_type &x , const double t );
+    static void writeCurrTime();
 };
 
 #endif // FRICTIONODE_HPP_INCLUDED

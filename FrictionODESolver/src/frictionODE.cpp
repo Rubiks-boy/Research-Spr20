@@ -22,23 +22,23 @@ void FrictionODE::rhs( const state_type x , state_type &dxdt , const double t ) 
     dxdt[1] = -(a/c + b/c * x[1] * x[1]);
 }
 
-void FrictionODE::write_cout( const state_type &x , const double t ) {
+void FrictionODE::writeData( const state_type &x , const double t ) {
     cout << t << '\t' << x[0] << '\t' << x[1] << endl;
 }
 
-void FrictionODE::write_curr_time() {
+void FrictionODE::writeCurrTime() {
     time_t now = time(0);
     tm *gmtm = gmtime(&now);
     cout << "UTC " << asctime(gmtm);
 }
 
 void FrictionODE::runExample() {
-    write_curr_time();
+    writeCurrTime();
 
     state_type x(2);
     x[0] = 0;
     x[1] = 0;
 
     integrate_const( make_controlled( 1E-12 , 1E-12 , stepper_type() ) ,
-                        FrictionODE::rhs , x , 0.0 , 1.0 , 0.01 , FrictionODE::write_cout );
+                        FrictionODE::rhs , x , 0.0 , 1.0 , 0.01 , FrictionODE::writeData );
 }

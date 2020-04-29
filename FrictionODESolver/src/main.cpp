@@ -4,13 +4,29 @@
 
 using namespace std;
 
-int main()
-{
-    // SimpleODEExample ode;
-	// SecondOrderODEExample ode;
+void simpleExample() {
+	SimpleODEExample ode;
+
+	ode.runExample();
+}
+
+void simpleSecondOrderExample() {
+	SecondOrderODEExample ode;
+
+	ode.runExample();
+}
+
+void frictionODE() {
 	FrictionODE ode;
 
 	ode.runExample();
+}
+
+int main()
+{
+	// simpleExample();
+	// simpleSecondOrderExample();
+	frictionODE();
 
 	return 0;
 }
