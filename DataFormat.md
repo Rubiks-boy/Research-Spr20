@@ -21,14 +21,13 @@ The description should provide a brief explanation of what data the parameters c
 
 ## Data output spec
 ### File name
-```Title--Identifier--yyyy-mm-dd--hh-mm-ss.txt```, where ```Title``` and ```Identifier``` are in ```UpperCamelCase``` and the timestamp is in UTC. 
+Two files, both titled ```Title--Identifier--yyyy-mm-dd--hh-mm-ss```, one with extension ```.json``` and one with extension ```.csv```. ```Title``` and ```Identifier``` are in ```UpperCamelCase``` and the timestamp (in UTC) is when execution of the program began. 
 
 ### Contents
+```.json``` file:
 ```
-##########
-A sentence about what the data in this file is
-##########
 {
+    "description": "A sentence about what the data in this file is",
     "time": "yyyy-mm-dd--hh-mm-ss",
     "params": {
         "paramKey1": paramVal1,
@@ -41,28 +40,42 @@ A sentence about what the data in this file is
         ...
     },
     "columns": [
-        [Column1Name, Column1ShortName, Column1Units],
-        [Column2Name, Column2ShortName, Column2Units],
+        {
+            "name": "Column1Name"
+            "shortName: "Column1ShortName",
+            "units": "Column1Units",
+        },
+        {
+            "name": "Column2Name"
+            "shortName: "Column2ShortName",
+            "units": "Column2Units",
+        },
         ...
     ],
 }
-##########
-x1, y1, z1, ...
-x2, y2, z2, ...
 ```
 
-#### Header
-The second line will likely be a copy of ```description``` from the input file.
+```.csv``` file:
+```
+Column1ShortName,Column2ShortName,Column3ShortName, ...
+x1,y1,z1, ...
+x2,y2,z2, ...
+```
 
-The remaining header information is formatted as json:
+#### .json file
+The ```.json``` file is for metadata.
+
 - ```time```: Timestamp (in UTC) of when the data collection began
+- ```description```: Copy of description from input file
 - ```params```: Copy of input file parameters
 - ```numCols```: Number of columns in the data
 - ```numRows```: Number of data points
 - ```project```: Project-specific metadata (key must be present, but can be empty). For example, this might include the version of the code being run, the source of the data, or the time elapsed to run a simulation.
 - ```columns```: Columns for each data point collected. ```ShortName``` can match ```Name```, or can be a shorter nickname (e.g. ```["Position", "x", "mm"]```). There must be ```numCols``` columns.
 
-#### Data
+#### .csv file
+The ```.csv``` file is for the data itself.
+
 There must be exactly ```numRows``` lines of data, and each line must have ```numCols``` values, in the order presented in the ```columns``` metadata. There is no requirement that this data is in any particular order (i.e. switching any two lines is ok).
 
 ## Example files
@@ -85,14 +98,12 @@ File contents:
 ```
 
 ### Output
-File name: ```SprLatchKE--MasslessLatch01--2020-04-23--02-26-36.txt```
+File name: ```SprLatchKE--MasslessLatch01--2020-04-23--02-26-36.json```
 
 File contents:
 ```
-##########
-Simulates the kinetic energy of a projectile in a spring-latch system with const unlatching force
-##########
 {
+    "description": "Simulates the kinetic energy of a projectile in a spring-latch system with const unlatching force",
     "time": "2020-04-23--02-26-36",
     "params": {
         "m": 5,
@@ -105,13 +116,35 @@ Simulates the kinetic energy of a projectile in a spring-latch system with const
     "project": {
     },
     "columns": [
-        ["time", "t", "s"],
-        ["position", "x", "mm"],
-        ["velocity", "v", "m/s"],
-        ["kinetic energy", "KE", "mJ"],
+        {
+            "name": "time"
+            "shortName: "t",
+            "units": "s",
+        },
+        {
+            "name": "position"
+            "shortName: "x",
+            "units": "mm",
+        },
+        {
+            "name": "velocity"
+            "shortName: "v",
+            "units": "m/s",
+        },
+        {
+            "name": "kinetic energy"
+            "shortName: "KE",
+            "units": "mJ",
+        },
     ],
 }
-##########
+```
+
+File name: ```SprLatchKE--MasslessLatch01--2020-04-23--02-26-36.csv```
+
+File contents:
+```
+t,x,v,KE
 0 0 0 0
 1 500 0.1 2
 2 750 0.25 1
