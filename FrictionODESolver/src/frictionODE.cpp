@@ -1,9 +1,9 @@
-#include "frictionode.hpp"
+#include "frictionODE.hpp"
 
 using namespace std;
 using namespace boost::numeric::odeint;
 
-void FrictionOde::rhs( const state_type x , state_type &dxdt , const double t ) {
+void FrictionODE::rhs( const state_type x , state_type &dxdt , const double t ) {
     // TOOD: Do something better with these constants, like read from a file or something
     const double mu = 0.2;
     const double fSpr = 1, fL = 1;
@@ -22,17 +22,17 @@ void FrictionOde::rhs( const state_type x , state_type &dxdt , const double t ) 
     dxdt[1] = -(a/c + b/c * x[1] * x[1]);
 }
 
-void FrictionOde::write_cout( const state_type &x , const double t ) {
+void FrictionODE::write_cout( const state_type &x , const double t ) {
     cout << t << '\t' << x[0] << '\t' << x[1] << endl;
 }
 
-void FrictionOde::write_curr_time() {
+void FrictionODE::write_curr_time() {
     time_t now = time(0);
     tm *gmtm = gmtime(&now);
     cout << "UTC " << asctime(gmtm);
 }
 
-void FrictionOde::runExample() {
+void FrictionODE::runExample() {
     write_curr_time();
 
     state_type x(2);
@@ -40,5 +40,5 @@ void FrictionOde::runExample() {
     x[1] = 0;
 
     integrate_const( make_controlled( 1E-12 , 1E-12 , stepper_type() ) ,
-                        FrictionOde::rhs , x , 0.0 , 1.0 , 0.01 , FrictionOde::write_cout );
+                        FrictionODE::rhs , x , 0.0 , 1.0 , 0.01 , FrictionODE::write_cout );
 }

@@ -13,7 +13,7 @@ using namespace boost::numeric::odeint;
  * Analytic solution is x(t) = sqrt(t) - 1/t
  */
 // Example from: https://headmyshoulder.github.io/odeint-v2/examples.html
-class SimpleOdeExample {
+class SimpleODEExample {
     public:
     void runExample();
 

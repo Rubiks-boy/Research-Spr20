@@ -9,7 +9,7 @@
 
 using namespace boost::numeric::odeint;
 
-class FrictionOde {
+class FrictionODE {
     public:
     void runExample();
 
