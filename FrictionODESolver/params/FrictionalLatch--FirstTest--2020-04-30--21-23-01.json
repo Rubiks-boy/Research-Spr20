@@ -1,0 +1,33 @@
+{
+	"columns" : 
+	[
+		{
+			"name" : "time",
+			"shortName" : "t",
+			"units" : "s"
+		},
+		{
+			"name" : "theta",
+			"shortName" : "theta",
+			"units" : "rad"
+		},
+		{
+			"name" : "d(theta)/dt",
+			"shortName" : "d(theta)/dt",
+			"units" : "rad/s"
+		}
+	],
+	"description" : "Simulates the kinetic energy of a projectile in a spring-latch system with const unlatching force",
+	"numCols" : 3,
+	"numRows" : 100,
+	"params" : 
+	{
+		"F_l" : 1,
+		"F_spr" : 1,
+		"m" : 1,
+		"m_l" : 0.10000000000000001,
+		"mu" : 0.20000000000000001,
+		"r" : 1
+	},
+	"time" : "2020-04-30--21-23-01"
+}
