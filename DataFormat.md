@@ -11,7 +11,7 @@ Input files should be saved as: ```Title--Identifier.json```, where ```Title``` 
         "paramKey1": paramVal1,
         "paramKey2": paramVal2,
         ...
-    },
+    }
 }
 ```
 
@@ -51,7 +51,7 @@ Two files, both titled ```Title--Identifier--yyyy-mm-dd--hh-mm-ss```, one with e
             "units": "Column2Units",
         },
         ...
-    ],
+    ]
 }
 ```
 
@@ -91,10 +91,10 @@ File contents:
             "m": 5,
             "m_l": 0.0,
             "F_l": 2,
-            "k": 0.5,
-        },
-    },
-},
+            "k": 0.5
+        }
+    }
+}
 ```
 
 ### Output
@@ -109,7 +109,7 @@ File contents:
         "m": 5,
         "m_l": 0.0,
         "F_l": 2,
-        "k": 0.5,
+        "k": 0.5
     },
     "numCols": 4,
     "numRows": 3,
@@ -135,8 +135,8 @@ File contents:
             "name": "kinetic energy"
             "shortName: "KE",
             "units": "mJ",
-        },
-    ],
+        }
+    ]
 }
 ```
 
