@@ -1,32 +1,25 @@
 #include "simpleODEExample.hpp"
 #include "secondOrderODEExample.hpp"
 #include "frictionODE.hpp"
+#include "dataFiles.hpp"
+#include "dist/json/json.h"
 
 using namespace std;
 
-void simpleExample() {
-	SimpleODEExample ode;
-
-	ode.runExample();
+void frictionODE(string inFileName) {
+	FrictionODE::runExample(inFileName);
 }
 
-void simpleSecondOrderExample() {
-	SecondOrderODEExample ode;
-
-	ode.runExample();
-}
-
-void frictionODE() {
-	FrictionODE ode;
-
-	ode.runExample();
-}
-
-int main()
+int main(int argc, char **argv)
 {
-	// simpleExample();
-	// simpleSecondOrderExample();
-	frictionODE();
+	if (argc < 1) {
+        std::cerr << "Usage: <filename> [filename...]\n";
+        return EXIT_FAILURE;
+    }
 
-	return 0;
+	for (int i=1; i<argc; i++) {
+		frictionODE(argv[i]);
+    }
+
+	return EXIT_SUCCESS;
 }

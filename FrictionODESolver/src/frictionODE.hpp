@@ -5,13 +5,21 @@
 #include <chrono>
 #include <ctime>
 #include <cmath>
+#include <string>
+#include <sstream>
 #include <boost/numeric/odeint.hpp>
 
+#include "dataFiles.hpp"
+#include "dist/json/json.h"
+
 using namespace boost::numeric::odeint;
+using namespace std;
 
 class FrictionODE {
     public:
-    void runExample();
+    FrictionODE() = delete;
+
+    static void runExample(string inFileName);
 
     private:
     typedef std::vector< double > state_type;
@@ -19,7 +27,12 @@ class FrictionODE {
 
     static void rhs( const state_type x , state_type &dxdt , const double t );
     static void writeData( const state_type &x , const double t );
-    static void writeCurrTime();
+    
+    static string getTime();
+    static string getOutFileName(string inFileName, string time);
+
+    static void parseParameters(string inFileName);
+    static void outputJson(string inFileName, string time);
 };
 
 #endif // FRICTIONODE_HPP_INCLUDED

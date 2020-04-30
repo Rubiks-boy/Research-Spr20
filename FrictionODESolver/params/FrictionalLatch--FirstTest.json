@@ -1,0 +1,11 @@
+{
+    "description": "Simulates the kinetic energy of a projectile in a spring-latch system with const unlatching force",
+    "params": {
+        "m": 1,
+        "m_l": 0.1,
+        "F_l": 1,
+        "F_spr": 1,
+        "r": 1,
+        "mu": 0.2
+    }
+ }
