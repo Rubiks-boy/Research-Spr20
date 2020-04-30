@@ -1,6 +1,7 @@
 #include "dataFiles.hpp"
 using namespace std;
 
+// Takes in a json file and returns a key-value pairing of the json file
 Json::Value DataFiles::parseJson(string fname) {
     try {
         ifstream file;
@@ -20,6 +21,7 @@ Json::Value DataFiles::parseJson(string fname) {
     }
 }
 
+// Writes the output json file with the given parameters
 bool DataFiles::writeJsonOutput(const string outputFileName, const string description, const string time, const Json::Value params, 
   const size_t numCols, const size_t numRows, const string colNames[], 
   const string colShortNames[], const string colUnits[], const Json::Value project) {

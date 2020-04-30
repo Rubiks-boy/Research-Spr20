@@ -4,13 +4,18 @@ using namespace std;
 using namespace boost::numeric::odeint;
 
 static const size_t numCols = 3, numRows = 100;
+static const double start_t = 0, end_t = 0.99, t_step = 0.01;
+static const double start_x[] = {0, 0};
 static const string colNames[] = {"time", "theta", "d(theta)/dt"};
 static const string colShortNames[] = {"t", "theta", "d(theta)/dt"};
 static const string colUnits[] = {"s", "rad", "rad/s"};
 
+// Information read from the input file
 static double m, mL, fL, fSpr, r, mu;
 static string description;
 static Json::Value params;
+
+// csv file to output data
 static ofstream outputData;
 
 void FrictionODE::rhs( const state_type x , state_type &dxdt , const double t ) {
@@ -71,30 +76,32 @@ string FrictionODE::getOutFileName(string inFileName, string time) {
 }
 
 void FrictionODE::runExample(string inFileName) {
+    // Read in parameters from the input file
     parseParameters(inFileName);
 
+    // Give indication that we're doing something
     cout << "Processing file: " << inFileName << endl;
     cout << description << endl;
 
+    // Get the time that integration is beginning
     string time = getTime();
 
+    // Get file name, less the extension
     const string outFileName = getOutFileName(inFileName, time);
 
+    // Create json output file, listing cols + params + time stamp
     outputJson(outFileName + ".json", time);
 
-    state_type x(2);
-    x[0] = 0;
-    x[1] = 0;
-
+    // Set up the csv file for outputting data
     outputData.open(outFileName + ".csv");
-    
     for(size_t i = 0; i < numCols - 1; ++i) {
         outputData << colShortNames[i] << ',';
     }
     outputData << colShortNames[numCols - 1] << '\n';
 
+    // Numerically solve the ODE
     integrate_const( make_controlled( 1E-12 , 1E-12 , stepper_type() ) ,
-                        FrictionODE::rhs , x , 0.0 , 0.99 , 0.01 , FrictionODE::writeData );
+                        FrictionODE::rhs , start_x , start_t , end_t , t_step , FrictionODE::writeData );
 
     outputData.close();
 }
