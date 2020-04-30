@@ -21,6 +21,7 @@ static ofstream outputData;
 void FrictionODE::rhs( const state_type x , state_type &dxdt , const double t ) {
     // Encodes (in matrix form, where x(t) = [x(t), dx/dt(t)]) the derivations from
     // ../../Friction between latch\, proj/derivations.pdf
+    // note that "x" should really say "theta" – "x" was used b/c it's shorter.
     double test = mu;
     const double tanX = tan(x[0]);
     const double cosX = cos(x[0]);
