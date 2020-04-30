@@ -31,7 +31,7 @@ class FrictionODE {
     static string getOutFileName(string inFileName);
 
     static void parseParameters(string inFileName);
-    static void outputJson(string inFileName);
+    static bool outputJson(string inFileName);
 };
 
 #endif // FRICTIONODE_HPP_INCLUDED

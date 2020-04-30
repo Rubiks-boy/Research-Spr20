@@ -50,15 +50,24 @@ void FrictionODE::parseParameters(string inFileName) {
     r = inF.getParamAsDouble("r");
 }
 
-void FrictionODE::outputJson(string outFileName) {
+bool FrictionODE::outputJson(string outFileName) {
     inF.numRows = numRows;
     inF.setColumns(numCols, colNames, colShortNames, colUnits);
-    inF.writeJsonOutput(outFileName);
+    return inF.writeJsonOutput(outFileName);
 }
 
 string FrictionODE::getOutFileName(string inFileName) {
     stringstream outputFileName;
-    outputFileName << inFileName.substr(0, inFileName.find(".json"));
+
+    // Separate path from the file name
+    size_t lastSlash = inFileName.find_last_of('/');
+    string path = inFileName.substr(0, lastSlash);
+    // Remove the "I-" from the file name
+    string fileName = inFileName.substr(lastSlash + 3);
+    string noExtension = fileName.substr(0, fileName.find('.'));
+
+    // Make the output file name: "/path/to/file/O-Title--Iden--T-I-M-E"
+    outputFileName << path << "/O-" << fileName;
     outputFileName << "--" << inF.getTimeAsString();
     return outputFileName.str();
 }
@@ -69,14 +78,16 @@ void FrictionODE::runExample(string inFileName) {
     inF.setTimeToNow();
 
     // Give indication that we're doing something
-    cout << "Processing file: " << inFileName << endl;
-    cout << inF.description << endl;
+    cout << "Processing input file: " << inFileName << endl;
+    cout << "Description: " << inF.description << endl;
 
     // Get file name, less the extension
     const string outFileName = getOutFileName(inFileName);
 
     // Create json output file, listing cols + params + time stamp
-    outputJson(outFileName + ".json");
+    if (outputJson(outFileName + ".json")) {
+        cout << "Wrote output file: " << outFileName << ".json" << endl;
+    }
 
     // Set up the csv file for outputting data
     outputData.open(outFileName + ".csv");
@@ -94,4 +105,6 @@ void FrictionODE::runExample(string inFileName) {
                         FrictionODE::rhs , x , start_t , end_t , t_step , FrictionODE::writeData );
 
     outputData.close();
+
+    cout << "Wrote output file: " << outFileName << ".csv" << endl;
 }

@@ -16,10 +16,10 @@ bool DataFile::parseJson(string inFileName) {
 
         file.close();
         
-        return EXIT_SUCCESS;
+        return true;
     } catch (ios_base::failure& e) {
         cerr << "Reading Json input file failed: " << e.what() << endl;
-        return EXIT_FAILURE;
+        return false;
     }
 }
 
@@ -53,10 +53,10 @@ bool DataFile::writeJsonOutput(const string outputFileName) {
 
         outputFile.close();
 
-        return EXIT_SUCCESS;
+        return true;
       } catch (ios_base::failure& e) {
         cerr << "Writing Json output file failed: " << e.what() << endl;
-        return EXIT_FAILURE;
+        return false;
       }
 }
 

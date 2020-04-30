@@ -1,7 +1,7 @@
 # PoSM Computer-Generated Data Format
 ## Input spec
 ### File name
-Input files should be saved as: ```Title--Identifier.json```, where ```Title``` and ```Identifier```, both in ```UpperCamelCase```. ```Title``` is intended to reflect a specific model or specific piece of equipment, while ```Identifier``` corresponds to this particular set of parameters (see example below).
+Input files should be saved as: ```I-Title--Identifier.json```, where ```Title``` and ```Identifier```, both in ```UpperCamelCase```. ```Title``` is intended to reflect a specific model or specific piece of equipment, while ```Identifier``` corresponds to this particular set of parameters (see example below). The ```I``` in front is simply to allow for wildcards: ex. you can run ```./myCode path/to/params/I-*.json```.
 
 ### File contents
 ```
@@ -21,7 +21,7 @@ The description should provide a brief explanation of what data the parameters c
 
 ## Data output spec
 ### File name
-Two files, both titled ```Title--Identifier--yyyy-mm-dd--hh-mm-ss```, one with extension ```.json``` and one with extension ```.csv```. ```Title``` and ```Identifier``` are in ```UpperCamelCase``` and the timestamp (in UTC) is when execution of the program began. 
+Two files, both titled ```O-Title--Identifier--yyyy-mm-dd--hh-mm-ss```, one with extension ```.json``` and one with extension ```.csv```. ```Title``` and ```Identifier``` are in ```UpperCamelCase``` and the timestamp (in UTC) is when execution of the program began. The capital ```O``` in front is to easily distinguish output/input files, such as for wildcards.
 
 ### Contents
 ```.json``` file:
@@ -80,7 +80,7 @@ There must be exactly ```numRows + 1``` lines of data, where the first line is a
 
 ## Example files
 ### Input
-File name: ```SprLatchKE--MasslessLatch01.json```
+File name: ```I-SprLatchKE--MasslessLatch01.json```
 
 File contents:
 ```
@@ -98,7 +98,7 @@ File contents:
 ```
 
 ### Output
-File name: ```SprLatchKE--MasslessLatch01--2020-04-23--02-26-36.json```
+File name: ```O-SprLatchKE--MasslessLatch01--2020-04-23--02-26-36.json```
 
 File contents:
 ```
@@ -140,7 +140,7 @@ File contents:
 }
 ```
 
-File name: ```SprLatchKE--MasslessLatch01--2020-04-23--02-26-36.csv```
+File name: ```O-SprLatchKE--MasslessLatch01--2020-04-23--02-26-36.csv```
 
 File contents:
 ```
