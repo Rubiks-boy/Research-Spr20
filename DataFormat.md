@@ -71,12 +71,12 @@ The ```.json``` file is for metadata.
 - ```numCols```: Number of columns in the data
 - ```numRows```: Number of data points
 - ```project```: Project-specific metadata (key must be present, but can be empty). For example, this might include the version of the code being run, the source of the data, or the time elapsed to run a simulation.
-- ```columns```: Columns for each data point collected. ```ShortName``` can match ```Name```, or can be a shorter nickname (e.g. ```["Position", "x", "mm"]```). There must be ```numCols``` columns.
+- ```columns```: Columns for each data point collected. ```ShortName``` can match ```Name```, or can be a shorter nickname (e.g. ```["Position", "x", "mm"]```). There must be ```numCols``` columns, in the order that they will be in the ```.csv```.
 
 #### .csv file
 The ```.csv``` file is for the data itself.
 
-There must be exactly ```numRows``` lines of data, and each line must have ```numCols``` values, in the order presented in the ```columns``` metadata. There is no requirement that this data is in any particular order (i.e. switching any two lines is ok).
+There must be exactly ```numRows + 1``` lines of data, where the first line is a header line containing the short names of each column. Each subsequent line must have ```numCols``` values, in the order presented in the ```columns``` metadata. There is no requirement that rows of data are in any particular order.
 
 ## Example files
 ### Input
