@@ -94,7 +94,7 @@ void FrictionODE::runExample(string inFileName) {
     outputData << colShortNames[numCols - 1] << '\n';
 
     integrate_const( make_controlled( 1E-12 , 1E-12 , stepper_type() ) ,
-                        FrictionODE::rhs , x , 0.0 , 1.0 , 0.01 , FrictionODE::writeData );
+                        FrictionODE::rhs , x , 0.0 , 0.99 , 0.01 , FrictionODE::writeData );
 
     outputData.close();
 }
