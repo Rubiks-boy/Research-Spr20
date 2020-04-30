@@ -1,8 +1,6 @@
 #include "simpleODEExample.hpp"
 #include "secondOrderODEExample.hpp"
 #include "frictionODE.hpp"
-#include "dataFiles.hpp"
-#include "dist/json/json.h"
 
 using namespace std;
 

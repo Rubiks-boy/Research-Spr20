@@ -9,8 +9,7 @@
 #include <sstream>
 #include <boost/numeric/odeint.hpp>
 
-#include "dataFiles.hpp"
-#include "dist/json/json.h"
+#include "dataFile.hpp"
 
 using namespace boost::numeric::odeint;
 using namespace std;
@@ -29,10 +28,10 @@ class FrictionODE {
     static void writeData( const state_type &x , const double t );
     
     static string getTime();
-    static string getOutFileName(string inFileName, string time);
+    static string getOutFileName(string inFileName);
 
     static void parseParameters(string inFileName);
-    static void outputJson(string inFileName, string time);
+    static void outputJson(string inFileName);
 };
 
 #endif // FRICTIONODE_HPP_INCLUDED
