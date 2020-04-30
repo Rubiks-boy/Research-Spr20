@@ -9,6 +9,7 @@
 *.synctex.gz
 main
 */.vscode/*
+.vscode/*
 *.o
 *.d
 out*.txt
