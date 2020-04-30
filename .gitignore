@@ -10,4 +10,5 @@
 main
 */.vscode/*
 *.o
+*.d
 out*.txt
